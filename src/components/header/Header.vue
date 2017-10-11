@@ -9,7 +9,7 @@
       <Icon name="reorder" scale="1.5"></Icon>
     </div>
   </div>
-  <div class="tab" ref="catType" @click="haha">
+  <div class="tab" ref="catType">
     <ul>
       <li class="type">狸花猫</li>
       <li class="type">波斯猫</li>
@@ -23,6 +23,9 @@
       <icon name="th-large"></icon>
     </div>
   </div>
+  <transition>
+    <City></City>
+  </transition>
 </div>
   
 </template>
@@ -30,10 +33,11 @@
 <script>
 import Icon from 'vue-awesome/components/Icon'
 import BScroll from 'better-scroll'
-
+import City from '@@/city/City'
 export default {
   components: {
-    Icon
+    Icon,
+    City
   },
   created() {
     this.$nextTick(() => {
@@ -43,11 +47,6 @@ export default {
         click: true
       })
     })
-  },
-  methods: {
-    haha() {
-      console.log(this.tabScroll)
-    }
   }
 }
 </script>
@@ -55,6 +54,7 @@ export default {
 <style lang="scss">
   .header-wrapper{
     padding: 10px;
+    box-shadow: 0px 4px 3px rgba(0, 0, 0, .1);
     .header {
       display: flex;
       justify-content: space-between;
@@ -70,6 +70,7 @@ export default {
     .tab {
       position: relative;
       width: 100%;
+      // margin-bottom: 10px;
       overflow: hidden;
       white-space:nowrap;
       ul {

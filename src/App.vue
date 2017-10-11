@@ -14,6 +14,10 @@ export default {
   components: {
     'v-header': Header,
     'v-map': vMap
+  },
+  beforeMount() {
+    let a = document.getElementById('box-wrapper')
+    document.body.removeChild(a)
   }
 }
 </script>
