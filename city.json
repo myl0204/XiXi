@@ -1,0 +1,43 @@
+{
+  "errno": 0,
+  "data": [
+    {
+      "flag": "hot",
+      "cityList": [
+        {
+          "name": "北京",
+          "eName": "beijing"
+        },
+        {
+          "name": "上海",
+          "eName": "shanghai"
+        }
+      ]
+    },
+    {
+      "flag": "A",
+      "cityList": [
+        {
+          "name": "鞍山市",
+          "eName": "anshan"
+        },
+        {
+          "name": "安庆",
+          "eName": "anqing"
+        },
+        {
+          "name": "安阳市",
+          "eName": "anyang"
+        },
+        {
+          "name": "阿拉善盟",
+          "eName": "alashanmeng"
+        },
+        {
+          "name": "安顺市",
+          "eName": "anshun"
+        }
+      ]
+    }
+  ]
+}
