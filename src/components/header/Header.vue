@@ -4,7 +4,7 @@
     <div class="user">
       <Icon name="user" scale="1.5"></Icon>
     </div>
-    <div class="city">杭州市<Icon name="angle-down"></Icon></div>
+    <div class="city" @click="showList">{{currentCity}}<Icon name="angle-down"></Icon></div>
     <div class="message">
       <Icon name="reorder" scale="1.5"></Icon>
     </div>
@@ -24,7 +24,7 @@
     </div>
   </div>
   <transition>
-    <City></City>
+    <City :allCity="allCity" ref="cityList" :currentCity="currentCity"></City>
   </transition>
 </div>
   
@@ -34,10 +34,17 @@
 import Icon from 'vue-awesome/components/Icon'
 import BScroll from 'better-scroll'
 import City from '@@/city/City'
+
+const SUC_CODE = 0
 export default {
   components: {
     Icon,
     City
+  },
+  data() {
+    return {
+      allCity: []
+    }
   },
   created() {
     this.$nextTick(() => {
@@ -47,6 +54,34 @@ export default {
         click: true
       })
     })
+    this.$http.get('/api/citylist')
+      .then((res) => {
+        console.log(res)
+        if (res.status >= 200 && res.status < 300 || res.status === 304) {
+          // res = res.data
+          // console.log(res.data.errno)
+          if (res.data.errno === SUC_CODE) {
+            this.allCity = res.data.data
+            console.log(this.allCity)
+          }
+        }
+      })
+  },
+  methods: {
+    showList() {
+      // console.log('show')
+      this.$refs.cityList.showList()
+    }
+  },
+  computed: {
+    currentCity() {
+      /* eslint-disable no-undef */
+      if (_DEFAULT_CITY) {
+        return _DEFAULT_CITY.city
+      } else {
+        return '获取城市中'
+      }
+    }
   }
 }
 </script>
@@ -54,6 +89,7 @@ export default {
 <style lang="scss">
   .header-wrapper{
     padding: 10px;
+    // box-sizing: border-box;
     box-shadow: 0px 4px 3px rgba(0, 0, 0, .1);
     .header {
       display: flex;
