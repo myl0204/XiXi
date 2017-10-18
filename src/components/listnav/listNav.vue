@@ -1,6 +1,6 @@
 <template>
   <div class="list-nav">
-    <ul v-show="listNavShowFlag" >
+    <ul>
       <li v-for="(letter, index) in sequenceLetter" class="item" :key="letter" ref="list"
       @touchstart="onTouchstart($event, index)" @touchend="onTouchend($event)" @touchmove.prevent="onTouchmove($event, index)"
       >{{letter}}</li>
@@ -13,9 +13,6 @@
 const NAV_HEIGHT = 18
 export default {
   props: {
-    listNavShowFlag: {
-      type: Boolean
-    },
     sequenceLetter: {
       type: Array
     }
