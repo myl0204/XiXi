@@ -14,7 +14,7 @@
       <h2 class="city-flag-fixed" ref="fixedFlag">{{fixedFlag}}</h2>
       <div class="other-city" ref="listWrapper">
         <ul>
-          <li v-for="cityObject in showCityList" :key="cityObject.flag" ref="list" v-show="cityObject.cityList.length">
+          <li v-for="cityObject in cityListToShow" :key="cityObject.flag" ref="list" v-show="cityObject.cityList && cityObject.cityList.length">
             <h2 class="city-flag">{{cityObject.flag}}</h2>
             <ul @touchstart="highlightCity($event)" @touchend="cancelHighlight($event)">
               <li v-for="city in cityObject.cityList" class="city-item" 
@@ -22,11 +22,11 @@
             </ul>
           </li>
         </ul>
-        <!-- <div v-show="!showCityList.length">没有城市！</div> -->
       </div>
     </div>
-    <listNav :listNavShowFlag="listShowFlag" 
-             :sequenceLetter="sequenceLetter"
+    <div class="info" v-show="!infoShowFlag"><p class="text">暂无结果，换个词试试吧！</p></div>
+    <listNav  
+            :sequenceLetter="sequenceLetter"
              @onTouchstart="touchstart"
              @onTouchend="touchend"
              @onTouchmove="touchmove"></listNav>
@@ -40,16 +40,25 @@ import listNav from '@@/listnav/listNav'
 // const sequenceLetter = ['Hot', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'W', 'X', 'Y', 'Z']
 const FLAG_HEIGHT = 40
 export default {
-  components: {
-    Icon,
-    listNav
+  props: {
+    allCity: {
+      type: Array
+    },
+    currentCity: {
+      type: String
+    }
   },
-  // mounted() {
-  //   this.sequenceLetter = this.allCity.map((val) => {
-  //     return val.flag.slice(0, 1)
-  //   })
-  //   console.log(this.sequenceLetter)
-  // },
+  data() {
+    return {
+      first: true,
+      input: '',
+      showFlag: false,
+      letterShowFlag: false,
+      currentLetter: '',
+      scrollY: -1,
+      fixedFlag: ''
+    }
+  },
   mounted() {
     this.scroll = new BScroll(this.$refs.listWrapper, {
       click: true,
@@ -60,58 +69,67 @@ export default {
       this.scrollY = pos.y
     })
   },
-  // updated() {
-  //   // 在updated钩子初始化BS是因为created时listwrapper不显示，取不到。
-  //   if (!this.scroll) {
-  //     this.scroll = new BScroll(this.$refs.listWrapper, {
-  //       click: true,
-  //       probeType: 3
-  //     })
-  //     this.scroll.on('scroll', (pos) => {
-  //       this.scrollY = pos.y
-  //       // console.log(this.scrollY)
-  //     })
-  //     // this.$nextTick(() => {
-  //     //   this._calculateHeight()
-  //     //   console.log(this.listHeight)
-  //     // })
-  //     console.log(`up`, this.scroll)
-  //   }
-  // },
-  props: {
-    allCity: {
-      type: Array
-    },
-    currentCity: {
-      type: String
-    }
-  },
-  watch: {
-    allCity() {
-      this.first = true
-    },
-    showCityList() {
-      this.fixedFlag = this.showCityList[0].flag
-      setTimeout(() => {
-        this.scroll.refresh()
-        this._calculateHeight()
-        this.scrollY = 0
-      }, 20)
-    },
-    scrollY(newVal) {
-      let listHeight = this.listHeight
-      for (let i = 0; i < listHeight.length - 1; i++) {
-        let h1 = listHeight[i]
-        let h2 = listHeight[i + 1]
-        if (-newVal >= h1 && -newVal < h2) {
-          let flag = this.sequenceLetter[i]
-          this.fixedFlag = flag === '★' ? '★热门城市' : flag
-          let diff = h2 + newVal
-          let fixedFlagTop = diff < FLAG_HEIGHT ? diff - FLAG_HEIGHT : 0
-          console.log(`fixedFlagTop`, fixedFlagTop)
-          this.$refs.fixedFlag.style.transform = `translateY(${fixedFlagTop}px)`
-        }
+  computed: {
+    cityListToShow() {
+      if (!this.input) {
+        return this.allCity
       }
+      let firstLetter = this.input.slice(0, 1).toUpperCase()
+      // 当输入为字母时的情况
+      if (firstLetter.charCodeAt(0) >= 65 && firstLetter.charCodeAt(0) <= 90) {
+        let sequenceNumber = this.sequenceLetter.indexOf(firstLetter)
+        if (sequenceNumber !== -1) {
+          // 只有一个字母,输出首字母为该字母的所有城市
+          // 否则进行字母配对
+          if (this.input.length === 1) {
+            return [this.allCity[sequenceNumber]]
+          } else {
+            let result = []
+            let nameReg = new RegExp(this.input, 'i')
+            result = this.allCity[sequenceNumber].cityList.filter((cityObj) => {
+              return cityObj.eName.match(nameReg)
+            })
+            if (result.length) {
+              return [
+                {
+                  flag: firstLetter.toUpperCase(),
+                  cityList: result
+                }
+              ]
+            } else {
+              // 返回[{}]是为了不报错
+              return [{}]
+            }
+          }
+        } else {
+          return [{}]
+        }
+      } else {
+        let result = []
+        let nameReg = new RegExp(this.input)
+        result = this.allCity.map((cityListObj) => {
+          let cityList = cityListObj['cityList'].filter((cityObj) => {
+            return cityObj.name.match(nameReg)
+          })
+          return {flag: cityListObj['flag'], cityList}
+        })
+        return result
+      }
+    },
+    infoShowFlag() {
+      let result = false
+      this.cityListToShow.forEach((cityObj) => {
+        if (cityObj.cityList && cityObj.cityList.length) {
+          result = true
+          return
+        }
+      })
+      return result
+    },
+    sequenceLetter() {
+      return this.allCity.map((val) => {
+        return val.flag.slice(0, 1)
+      })
     }
   },
   methods: {
@@ -150,8 +168,6 @@ export default {
       this._scroll(index)
     },
     _scroll(index) {
-      console.log(index)
-      // this.fixedFlag = this.sequenceLetter[index]
       this.scroll.scrollToElement(this.$refs.list[index])
       this.scrollY = this.scroll.y
     },
@@ -162,90 +178,38 @@ export default {
         height += list[i].clientHeight
         this.listHeight.push(height)
       }
-      console.log(this.listHeight)
     }
   },
-  data() {
-    return {
-      first: true,
-      input: '',
-      showFlag: false,
-      letterShowFlag: false,
-      currentLetter: '',
-      scrollY: -1,
-      fixedFlag: ''
-      // sequenceLetter: ['★', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'W', 'X', 'Y', 'Z']
-    }
-  },
-  computed: {
-    showCityList() {
-      if (!this.input) {
-        return this.allCity
-      }
-      let firstLetter = this.input.slice(0, 1).toUpperCase()
-      // 当输入为字母时的情况
-      if (firstLetter.charCodeAt(0) >= 65 && firstLetter.charCodeAt(0) <= 90) {
-        let sequenceNumber = this.sequenceLetter.indexOf(firstLetter)
-        if (sequenceNumber !== -1) {
-          // 只有一个字母,输出首字母为该字母的所有城市
-          // 否则进行字母配对
-          if (this.input.length === 1) {
-            return [this.allCity[sequenceNumber]]
-          } else {
-            let result = []
-            let nameReg = new RegExp(this.input, 'i')
-            result = this.allCity[sequenceNumber].cityList.filter((cityObj) => {
-              return cityObj.eName.match(nameReg)
-            })
-            if (result.length) {
-              return [
-                {
-                  flag: firstLetter.toUpperCase(),
-                  cityList: result
-                }
-              ]
-            } else {
-              return result
-            }
-          }
-        } else {
-          return []
+  watch: {
+    allCity() {
+      this.first = true
+    },
+    cityListToShow() {
+      this.fixedFlag = this.cityListToShow[0].flag
+      setTimeout(() => {
+        this.scroll.refresh()
+        this._calculateHeight()
+        this.scrollY = 0
+      }, 20)
+    },
+    scrollY(newVal) {
+      let listHeight = this.listHeight
+      for (let i = 0; i < listHeight.length - 1; i++) {
+        let h1 = listHeight[i]
+        let h2 = listHeight[i + 1]
+        if (-newVal >= h1 && -newVal < h2) {
+          let flag = this.sequenceLetter[i]
+          this.fixedFlag = flag === '★' ? '★热门城市' : flag
+          let diff = h2 + newVal
+          let fixedFlagTop = diff < FLAG_HEIGHT ? diff - FLAG_HEIGHT : 0
+          this.$refs.fixedFlag.style.transform = `translateY(${fixedFlagTop}px)`
         }
-      } else {
-        let result = []
-        let nameReg = new RegExp(this.input)
-        result = this.allCity.map((cityListObj) => {
-          let cityList = cityListObj['cityList'].filter((cityObj) => {
-            return cityObj.name.match(nameReg)
-          })
-          return {flag: cityListObj['flag'], cityList}
-          // console.log('cityList', cityList)
-          // let obj = {flag: cityListObj.flag, cityList: cityList}
-          // return obj.cityList && obj.cityList.length
-          // let cityList = cityListObj.cityList.filter((cityObj) => {
-          //   return cityObj.name.match(nameReg)
-          // })
-          // return {flag: cityListObj.flag, cityList}
-        })
-        // console.log(result, 1)
-        // let _result = []
-        // result.forEach((cityListObj) => {
-        //   if (cityListObj.cityList.length > 0) {
-        //     _result.push(cityListObj)
-        //   }
-        // })
-        // console.log(result, 2)
-        return result
       }
-    },
-    listShowFlag() {
-      return this.showCityList && this.showCityList.length > 0
-    },
-    sequenceLetter() {
-      return this.allCity.map((val) => {
-        return val.flag.slice(0, 1)
-      })
     }
+  },
+  components: {
+    Icon,
+    listNav
   }
 }
 </script>
@@ -337,8 +301,8 @@ export default {
         height: 40px;
         line-height: 40px;
         background-color: #fff;
-        z-index: 50;
-        transform: translateZ(0)
+        z-index: 20;
+        // transform: translateZ(0)
       }
       .city-flag-fixed {
         position: absolute;
@@ -361,6 +325,7 @@ export default {
         bottom: 0;
         // padding: 0 20px;
         overflow: hidden;
+        // z-index: 20;
         .city-flag {
           padding: 0 20px;
           height: 40px;
@@ -399,6 +364,21 @@ export default {
             }
           }
         }
+      }
+    }
+    .info {
+      position: absolute;
+      top: -40px;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      background-color: #fff;
+      z-index: 30;
+      .text {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        transform: translateY(-50%)
       }
     }
   }
