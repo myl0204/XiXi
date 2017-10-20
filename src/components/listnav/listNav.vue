@@ -59,6 +59,7 @@ export default {
   top: 50%;
   right: 10px;
   transform: translateY(-50%);
+  z-index: 20;
   .item {
     padding: 2px 10px;
     font-size: 14px;
