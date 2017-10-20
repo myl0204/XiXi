@@ -1,44 +1,47 @@
 <template>
-  <div class="city-selector" v-show="showFlag">
-    <div class="city-input">
-      <input type="text" placeholder="城市中文名或拼音" v-model="input">
-      <span class="cancel">
-        <span class="icon" @click="clearInput">
-          <Icon name="times-circle" class="icon" v-show="input.length"></Icon>
+  <transition name="silde-fade" @after-enter="afterEnter">
+    <div class="city-selector" v-show="showFlag">
+      <div class="city-input">
+        <input type="text" placeholder="城市中文名或拼音" v-model="input">
+        <span class="cancel">
+          <span class="icon" @click="clearInput">
+            <Icon name="times-circle" class="icon" v-show="input.length"></Icon>
+          </span>
+          <span class="text" @click="hideList">取消</span>
         </span>
-        <span class="text" @click="hideList">取消</span>
-      </span>
-    </div>
-    <div class="city-list">
-      <div class="cur-city" @click="showList">当前城市:{{currentCity}}</div>
-      <h2 class="city-flag-fixed" ref="fixedFlag">{{fixedFlag}}</h2>
-      <div class="other-city" ref="listWrapper">
-        <ul>
-          <li v-for="cityObject in cityListToShow" :key="cityObject.flag" ref="list" v-show="cityObject.cityList && cityObject.cityList.length">
-            <h2 class="city-flag">{{cityObject.flag}}</h2>
-            <ul @touchstart="highlightCity($event)" @touchend="cancelHighlight($event)">
-              <li v-for="city in cityObject.cityList" class="city-item" 
-              :key="city.eName">{{city.name}}</li>
-            </ul>
-          </li>
-        </ul>
       </div>
+      <div class="city-list">
+        <div class="cur-city" @click="showList">当前城市:{{currentCity}}</div>
+        <h2 class="city-flag-fixed" ref="fixedFlag">{{fixedFlag}}</h2>
+        <div class="other-city" ref="listWrapper">
+          <ul>
+            <li v-for="cityObject in cityListToShow" :key="cityObject.flag" ref="list" v-show="cityObject.cityList && cityObject.cityList.length">
+              <h2 class="city-flag">{{cityObject.flag}}</h2>
+              <ul @touchstart="highlightCity($event)" @touchend="cancelHighlight($event)">
+                <li v-for="city in cityObject.cityList" class="city-item" 
+                :key="city.eName">{{city.name}}</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="info" v-show="!infoShowFlag"><p class="text">暂无结果，换个词试试吧！</p></div>
+      <listNav  
+              :sequenceLetter="sequenceLetter"
+              @onTouchstart="touchstart"
+              @onTouchend="touchend"
+              @onTouchmove="touchmove"></listNav>
     </div>
-    <div class="info" v-show="!infoShowFlag"><p class="text">暂无结果，换个词试试吧！</p></div>
-    <listNav  
-            :sequenceLetter="sequenceLetter"
-             @onTouchstart="touchstart"
-             @onTouchend="touchend"
-             @onTouchmove="touchmove"></listNav>
-  </div>
+  </transition>
 </template>
 
 <script>
 import Icon from 'vue-awesome/components/Icon'
 import BScroll from 'better-scroll'
 import listNav from '@@/listnav/listNav'
-// const sequenceLetter = ['Hot', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'W', 'X', 'Y', 'Z']
 const FLAG_HEIGHT = 40
+// const VH = window.innerHeight
+// const OFFSETY = 0.7 * VH - 54
 export default {
   props: {
     allCity: {
@@ -50,7 +53,6 @@ export default {
   },
   data() {
     return {
-      first: true,
       input: '',
       showFlag: false,
       letterShowFlag: false,
@@ -67,6 +69,9 @@ export default {
     })
     this.scroll.on('scroll', (pos) => {
       this.scrollY = pos.y
+    })
+    this.scroll.on('refresh', () => {
+      this._calculateHeight()
     })
   },
   computed: {
@@ -134,20 +139,13 @@ export default {
   },
   methods: {
     showList() {
-      // 首次打开列表，scroll刷新，计算高度。
-      if (this.first) {
-        this.first = false
-        // 这里$nextTick不起作用,可能是用法不对。
-        // 猜测$nextTick是需要在数据改变后使用。
-        setTimeout(() => {
-          this.scroll.refresh()
-          this._calculateHeight()
-        }, 20)
-      }
       this.showFlag = true
     },
     hideList() {
       this.showFlag = false
+      this.clearInput()
+      this._scroll(0)
+      this.scrollY = 0
     },
     clearInput() {
       this.input = ''
@@ -167,6 +165,11 @@ export default {
     touchmove(index) {
       this._scroll(index)
     },
+    afterEnter() {
+      // 让BScroll重新计算各种属性，否则scrollToElement表现有误差
+      // 因为按照之前的逻辑打开列表会refresh，此时正是fade-slide-enter的时候。
+      this.scroll.refresh()
+    },
     _scroll(index) {
       this.scroll.scrollToElement(this.$refs.list[index])
       this.scrollY = this.scroll.y
@@ -181,14 +184,10 @@ export default {
     }
   },
   watch: {
-    allCity() {
-      this.first = true
-    },
     cityListToShow() {
       this.fixedFlag = this.cityListToShow[0].flag
       setTimeout(() => {
         this.scroll.refresh()
-        this._calculateHeight()
         this.scrollY = 0
       }, 20)
     },
@@ -224,6 +223,13 @@ export default {
     box-shadow: 1px -1px 1px rgba(0, 0, 0, .2), -1px 0 1px rgba(0, 0, 0, .2);
     overflow: hidden;
     background-color: #fff;
+    &.silde-fade-enter, &.silde-fade-leave-to {
+      top: 70vh;
+      opacity: 0;
+    }
+    &.silde-fade-enter-active, &.silde-fade-leave-active {
+      transition:all .15s linear
+    }
     .city-input {
       position: fixed;
       top: 0;
@@ -234,9 +240,11 @@ export default {
       box-shadow: 0 2px 1px rgba(0, 0, 0, .2);
       // box-sizing: border-box;
       input {
-        padding: 9px 15px;
-        font-size: 14px;
-        line-height: 14px;
+        // 这里用padding来撑开高度的话会遮挡父级的box-shadow。
+        height: 36px;
+        padding: 0px 15px;
+        font-size: 12px;
+        // line-height: 14px;
         caret-color: #ff9800;
         &:focus {
           border: none;
@@ -247,8 +255,8 @@ export default {
         position: absolute;
         right: 15px;
         top: 0;
-        height: 34px;
-        line-height: 34px;
+        height: 36px;
+        line-height: 36px;
         font-size: 0;
         color: gray;
         .icon {
@@ -264,7 +272,7 @@ export default {
           height: 100%;
           padding-left: 7px;
           font-size: 12px;
-          line-height: 34px;
+          line-height: 36px;
           position: relative;
           &:after {
             display: block;
