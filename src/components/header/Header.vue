@@ -4,7 +4,7 @@
     <div class="user">
       <Icon name="user" scale="1.5"></Icon>
     </div>
-    <div class="city" @click="showList">{{currentCity}}<Icon name="angle-down"></Icon></div>
+    <div class="city" @click="showList">{{curCity}}<Icon name="angle-down"></Icon></div>
     <div class="message">
       <Icon name="reorder" scale="1.5"></Icon>
     </div>
@@ -23,9 +23,7 @@
       <icon name="th-large"></icon>
     </div>
   </div>
-  <transition>
-    <City :allCity="allCity" ref="cityList" :currentCity="currentCity"></City>
-  </transition>
+  <City :allCity="allCity" ref="cityList" :curCity="curCity"></City>
 </div>
   
 </template>
@@ -37,10 +35,6 @@ import City from '@@/city/City'
 
 const SUC_CODE = 0
 export default {
-  components: {
-    Icon,
-    City
-  },
   data() {
     return {
       allCity: []
@@ -48,7 +42,7 @@ export default {
   },
   created() {
     this.$nextTick(() => {
-      this.tabScroll = new BScroll(this.$refs.catType, {
+      this.Scroll = new BScroll(this.$refs.catType, {
         scrollX: true,
         scrollY: false,
         click: true
@@ -56,32 +50,27 @@ export default {
     })
     this.$http.get('/api/citylist')
       .then((res) => {
-        console.log(res)
         if (res.status >= 200 && res.status < 300 || res.status === 304) {
-          // res = res.data
-          // console.log(res.data.errno)
           if (res.data.errno === SUC_CODE) {
             this.allCity = res.data.data
-            console.log(this.allCity)
           }
         }
       })
   },
+  computed: {
+    curCity() {
+      /* eslint-disable no-undef */
+      return this.$store.state.curCity
+    }
+  },
   methods: {
     showList() {
-      // console.log('show')
       this.$refs.cityList.showList()
     }
   },
-  computed: {
-    currentCity() {
-      /* eslint-disable no-undef */
-      if (_DEFAULT_CITY) {
-        return _DEFAULT_CITY.city
-      } else {
-        return '获取城市中'
-      }
-    }
+  components: {
+    Icon,
+    City
   }
 }
 </script>

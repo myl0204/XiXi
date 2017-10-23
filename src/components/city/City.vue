@@ -11,7 +11,7 @@
         </span>
       </div>
       <div class="city-list">
-        <div class="cur-city" @click="showList">当前城市:{{currentCity}}</div>
+        <div class="cur-city" @click="showList">当前城市:{{curCity}}</div>
         <h2 class="city-flag-fixed" ref="fixedFlag">{{fixedFlag}}</h2>
         <div class="other-city" ref="listWrapper">
           <ul>
@@ -19,7 +19,7 @@
               <h2 class="city-flag">{{cityObject.flag}}</h2>
               <ul @touchstart="highlightCity($event)" @touchend="cancelHighlight($event)">
                 <li v-for="city in cityObject.cityList" class="city-item" 
-                :key="city.eName">{{city.name}}</li>
+                :key="city.eName" :data-cname="city.name" @click="changeCity($event)">{{city.name}}</li>
               </ul>
             </li>
           </ul>
@@ -46,9 +46,6 @@ export default {
   props: {
     allCity: {
       type: Array
-    },
-    currentCity: {
-      type: String
     }
   },
   data() {
@@ -75,6 +72,9 @@ export default {
     })
   },
   computed: {
+    curCity() {
+      return this.$store.state.curCity
+    },
     cityListToShow() {
       if (!this.input) {
         return this.allCity
@@ -155,6 +155,11 @@ export default {
     },
     cancelHighlight(ev) {
       ev.target.classList.remove('active')
+    },
+    changeCity(ev) {
+      let newCity = ev.target.dataset.cname
+      this.$store.commit('changeCity', newCity)
+      this.hideList()
     },
     touchstart(index) {
       this._scroll(index)
