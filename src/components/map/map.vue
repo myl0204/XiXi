@@ -6,26 +6,55 @@
 
 <script>
 export default {
+  data() {
+    return {
+      myLatLng: {},
+      address: '正在获取撸猫地点'
+    }
+  },
   mounted() {
     this.$nextTick(() => {
       this.init()
     })
   },
+  computed: {
+    curCity() {
+      return this.$store.state.curCity
+    }
+  },
   methods: {
     init() {
       /* eslint-disable no-undef */
-      this.geolocation = new qq.maps.Geolocation() // h5地图组件
-      // console.log(_DEFAULT_CITY)
-      this.myLatlng = new qq.maps.LatLng(_DEFAULT_CITY.lat, _DEFAULT_CITY.lng)
-      let myOptions = {
+      // h5地图组件，前端定位。
+      this.geolocation = new qq.maps.Geolocation()
+      // 地址与经纬度转换
+      this.locationToLatlng = new qq.maps.Geocoder()
+      this.laglngToLocation = new qq.maps.Geocoder()
+      // 定位城市(与curcity不同，该对象根据定位结果做出更改而不随用户点击更改)
+      this.myCity = _DEFAULT_CITY && _DEFAULT_CITY.city ? _DEFAULT_CITY : undefined
+      if (!this.myCity) {
+        this.geolocation.getIpLocation((position) => {
+          this.myCity = postion
+          this.myLatLng = new qq.maps.LatLng(position.lag, position.lng)
+          this.$store.commit('changeCity', position.city)
+        }, () => {
+          this.$store.commit('changeCity', '获取位置失败')
+        })
+      } else {
+        this.$store.commit('changeCity', this.myCity.city)
+      }
+      this.myLatLng = new qq.maps.LatLng(_DEFAULT_CITY.lat, _DEFAULT_CITY.lng)
+      let mapOptions = {
         disableDefaultUI: true,
         zoom: 15,
-        center: this.myLatlng,
+        center: this.myLatLng,
         mapTypeId: qq.maps.MapTypeId.ROADMAP
       }
-      this.map = new qq.maps.Map(this.$refs.map, myOptions) // js API
+      // js API，初始化地图类
+      this.map = new qq.maps.Map(this.$refs.map, mapOptions)
       this._initGetLocBtn()
-      this.getLocation()
+
+      // this.getLocation() 首次调用已经通过watch curCity来调用，不用再重复调用了
     },
     _initGetLocBtn() {
       let locBtn = document.createElement('button')
@@ -37,35 +66,52 @@ export default {
       })
       this.map.controls[qq.maps.ControlPosition.LEFT_TOP].push(locBtn)
     },
-    _getLocation() {
-      return new Promise((resolve, reject) => {
-        if (navigator.geolocation) {
-          resolve(this.moveCenter, this.getLocationFailed)
-        } else {
-          reject('浏览器不支持')
-        }
-      })
-    },
     getLocation() {
-      this._getLocation().then((sucCb, errCb) => {
-        this.geolocation.getLocation(sucCb, errCb)
-        this.map.setZoom(15)
-      }, (err) => {
-        alert(err)
-      })
+      this.geolocation.getLocation(this.moveCenter, this.getIpLocation)
     },
-    // getl() {
-    //   this.geolocation.getLocation(this.moveCenter, this.test3)
-    // },
-    // getIpLocation(sucCb, errCb) {
-    //   this.geolocation.getIpLocation(sucCb, errCb)
-    // },
+    getIpLocation() {
+      this.geolocation.getIpLocation(this.moveCenter, this.getLocationFailed)
+    },
     moveCenter(position) {
-      this.myLatlng = new qq.maps.LatLng(position.lat, position.lng)
-      this.map.panTo(this.myLatlng, 1000)
+      this.myLatLng = new qq.maps.LatLng(position.lat, position.lng)
+      this.map.panTo(this.myLatLng)
+      this.getAddress()
+    },
+    getAddress() {
+      this.laglngToLocation.getAddress(this.myLatLng)
+      this.laglngToLocation.setComplete((result) => {
+        this.address = result.detail.nearPois[0].name
+      })
     },
     getLocationFailed() {
       alert('获取位置失败')
+    }
+  },
+  watch: {
+    myLatLng() {
+      // console.log(`map,latlng`)
+      if (this.map) {
+        // console.log(`map true`)
+        this.map.panTo(this.myLatLng)
+      }
+      // this.map.panTo(this.myLatLng)
+    },
+    curCity(newCity) {
+      // console.log(newCity, this.myCity)
+      if (newCity === this.myCity.city) {
+        console.log(`watch内`)
+        this.getLocation()
+      } else {
+        let newAddress = newCity + '市政府'
+        this.locationToLatlng = new qq.maps.Geocoder()
+        this.locationToLatlng.getLocation(newAddress)
+        this.locationToLatlng.setComplete((result) => {
+          let {lat, lng} = result.detail.location
+          console.log(`watch curCity` + lat, lng)
+          this.myLatLng = new qq.maps.LatLng(lat, lng)
+          console.log(lat, lng)
+        })
+      }
     }
   }
 }
