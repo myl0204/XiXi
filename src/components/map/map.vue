@@ -1,16 +1,21 @@
 <template>
   <div id="map-container" ref="map">
     <!-- <button class="btn" @click="getLocation">点我定位</button> -->
+    <mapInput :address="address"></mapInput>
   </div>
 </template>
 
 <script>
+import mapInput from '@@/mapinput/MapInput'
 export default {
   data() {
     return {
       myLatLng: {},
-      address: '正在获取撸猫地点'
+      address: '正在获取你的位置'
     }
+  },
+  components: {
+    mapInput
   },
   mounted() {
     this.$nextTick(() => {
@@ -67,10 +72,10 @@ export default {
       this.map.controls[qq.maps.ControlPosition.LEFT_TOP].push(locBtn)
     },
     getLocation() {
-      this.geolocation.getLocation(this.moveCenter, this.getIpLocation)
+      this.geolocation.getLocation(this.moveCenter, this.getIpLocation, {timeout: 3000})
     },
     getIpLocation() {
-      this.geolocation.getIpLocation(this.moveCenter, this.getLocationFailed)
+      this.geolocation.getIpLocation(this.moveCenter, this.getLocationFailed, {timeout: 3000})
     },
     moveCenter(position) {
       this.myLatLng = new qq.maps.LatLng(position.lat, position.lng)
@@ -99,17 +104,19 @@ export default {
     curCity(newCity) {
       // console.log(newCity, this.myCity)
       if (newCity === this.myCity.city) {
-        console.log(`watch内`)
+        // console.log(`watch内`)
         this.getLocation()
       } else {
         let newAddress = newCity + '市政府'
+        this.address = '正在获取你的位置'
         this.locationToLatlng = new qq.maps.Geocoder()
         this.locationToLatlng.getLocation(newAddress)
         this.locationToLatlng.setComplete((result) => {
           let {lat, lng} = result.detail.location
-          console.log(`watch curCity` + lat, lng)
+          // console.log(`watch curCity` + lat, lng)
           this.myLatLng = new qq.maps.LatLng(lat, lng)
-          console.log(lat, lng)
+          this.getAddress()
+          // console.log(lat, lng)
         })
       }
     }
