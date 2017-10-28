@@ -2,7 +2,7 @@
   <transition name="silde-fade" @after-enter="afterEnter">
     <div class="city-selector" v-show="showFlag">
       <div class="city-input">
-        <input type="text" placeholder="城市中文名或拼音" v-model="input">
+        <input type="text" placeholder="城市中文名或拼音" v-model="input" autofocus ref="input">
         <span class="cancel">
           <span class="icon" @click="clearInput">
             <Icon name="times-circle" class="icon" v-show="input.length"></Icon>
@@ -149,6 +149,7 @@ export default {
     },
     clearInput() {
       this.input = ''
+      this.$refs.input.focus()
     },
     highlightCity(ev) {
       ev.target.classList.add('active')
@@ -219,10 +220,12 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../common/scss/mixin';
   .city-selector {
     position: absolute;
-    width: 96%;
+    // width: 96%;
     left: 2%;
+    right: 2%;
     top: 54px;
     bottom: 0;
     box-shadow: 1px -1px 1px rgba(0, 0, 0, .2), -1px 0 1px rgba(0, 0, 0, .2);
@@ -246,6 +249,7 @@ export default {
       // box-sizing: border-box;
       input {
         // 这里用padding来撑开高度的话会遮挡父级的box-shadow。
+        width: 100%;
         height: 36px;
         padding: 0px 15px;
         font-size: 12px;
@@ -278,26 +282,7 @@ export default {
           padding-left: 7px;
           font-size: 12px;
           line-height: 36px;
-          position: relative;
-          &:after {
-            display: block;
-            position: absolute;
-            left: 0;
-            bottom: 33.3%;
-            content: ' ';
-            width: 0;
-            height: 33.3%;
-            border-left: 1px solid rgba(128, 128, 128, .1);
-            @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
-              -webkit-transform: scaleX(0.7);
-              transform: scaleX(0.7)
-            }
-            @media (-webkit-min-device-pixel-ratio: 2),
-            (min-device-pixel-ratio: 2) {
-              -webkit-transform: scaleX(0.5);
-              transform: scaleX(0.5)
-            }
-          }
+          @include border-1px-left
         }
       }
     }
@@ -347,34 +332,15 @@ export default {
           font-weight: 200;
           color: gray;
           background-color: #f7f7f7;
-          // font-size: 
         }
         .city-item {
           position: relative;
           padding: 0 20px;
           height: 40px;
           line-height: 40px;
+          @include border-1px-bottom;
           &.active {
             background-color: rgba(230, 230, 230, 0.5);
-          }
-          &:after {
-            display: block;
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            content: ' ';
-            width: 100%;
-            height: 0;
-            border-bottom: 1px solid rgba(128, 128, 128, .1);
-            @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
-              -webkit-transform: scaleY(0.7);
-              transform: scaleY(0.7)
-            }
-            @media (-webkit-min-device-pixel-ratio: 2),
-            (min-device-pixel-ratio: 2) {
-              -webkit-transform: scaleY(0.5);
-              transform: scaleY(0.5)
-            }
           }
         }
       }

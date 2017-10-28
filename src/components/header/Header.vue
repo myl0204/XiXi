@@ -4,7 +4,7 @@
     <div class="user">
       <Icon name="user" scale="1.5"></Icon>
     </div>
-    <div class="city" @click="showList">{{curCity}}<Icon name="angle-down"></Icon></div>
+    <div class="city" @click="showList"><span class="text">{{curCity}}</span><span class="icon"><Icon name="angle-down"></Icon></span></div>
     <div class="message">
       <Icon name="reorder" scale="1.5"></Icon>
     </div>
@@ -23,7 +23,7 @@
       <icon name="th-large"></icon>
     </div>
   </div>
-  <City :allCity="allCity" ref="cityList" :curCity="curCity"></City>
+  <City :allCity="allCity" ref="cityList"></City>
 </div>
   
 </template>
@@ -90,6 +90,14 @@ export default {
       }
       .city {
         line-height: 34px;
+        .text {
+          display: inline-block;
+          margin-right: 5px;
+        }
+        .icon {
+          position: relative;
+          top: 2px;
+        }
       }
     }
     .tab {
