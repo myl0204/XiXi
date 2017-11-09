@@ -20,6 +20,28 @@
   }
 }
 
+@mixin border-1px-right($color:rgba(128, 128, 128, 0.1)) {
+  position: relative;
+  &:after {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 20%;
+    bottom: 20%;
+    content: ' ';
+    border-right: 1px solid $color;
+    @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
+      -webkit-transform: scaleY(0.7);
+      transform: scaleY(0.7)
+    }
+    @media (-webkit-min-device-pixel-ratio: 2),
+    (min-device-pixel-ratio: 2) {
+      -webkit-transform: scaleY(0.5);
+      transform: scaleY(0.5)
+    }
+  }
+}
+
 @mixin border-1px-bottom($color:rgba(128, 128, 128, 0.1)) {
   position: relative;
   &:after {
