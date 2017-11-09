@@ -1,7 +1,6 @@
 <template>
   <div id="map-container" ref="map">
     <!-- <button class="btn" @click="getLocation">点我定位</button> -->
-    <mapInput :address="address"></mapInput>
   </div>
 </template>
 
@@ -38,6 +37,7 @@ export default {
       // 定位城市(与curcity不同，该对象根据定位结果做出更改而不随用户点击更改)
       this.myCity = _DEFAULT_CITY && _DEFAULT_CITY.city ? _DEFAULT_CITY : undefined
       if (!this.myCity) {
+        console.log(`no mycity`)
         this.geolocation.getIpLocation((position) => {
           this.myCity = postion
           this.myLatLng = new qq.maps.LatLng(position.lag, position.lng)
@@ -86,6 +86,7 @@ export default {
       this.laglngToLocation.getAddress(this.myLatLng)
       this.laglngToLocation.setComplete((result) => {
         this.address = result.detail.nearPois[0].name
+        this.$store.commit('changeAddress', this.address)
       })
     },
     getLocationFailed() {
@@ -94,17 +95,12 @@ export default {
   },
   watch: {
     myLatLng() {
-      // console.log(`map,latlng`)
       if (this.map) {
-        // console.log(`map true`)
         this.map.panTo(this.myLatLng)
       }
-      // this.map.panTo(this.myLatLng)
     },
     curCity(newCity) {
-      // console.log(newCity, this.myCity)
       if (newCity === this.myCity.city) {
-        // console.log(`watch内`)
         this.getLocation()
       } else {
         let newAddress = newCity + '市政府'
@@ -113,10 +109,8 @@ export default {
         this.locationToLatlng.getLocation(newAddress)
         this.locationToLatlng.setComplete((result) => {
           let {lat, lng} = result.detail.location
-          // console.log(`watch curCity` + lat, lng)
           this.myLatLng = new qq.maps.LatLng(lat, lng)
           this.getAddress()
-          // console.log(lat, lng)
         })
       }
     }

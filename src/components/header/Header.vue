@@ -23,7 +23,7 @@
       <icon name="th-large"></icon>
     </div>
   </div>
-  <City :allCity="allCity" ref="cityList"></City>
+  <!-- <City :allCity="allCity" ref="cityList"></City> -->
 </div>
   
 </template>
@@ -33,13 +33,13 @@ import Icon from 'vue-awesome/components/Icon'
 import BScroll from 'better-scroll'
 import City from '@@/city/City'
 
-const SUC_CODE = 0
+// const SUC_CODE = 0
 export default {
-  data() {
-    return {
-      allCity: []
-    }
-  },
+  // data() {
+  //   return {
+  //     allCity: []
+  //   }
+  // },
   created() {
     this.$nextTick(() => {
       this.Scroll = new BScroll(this.$refs.catType, {
@@ -48,14 +48,14 @@ export default {
         click: true
       })
     })
-    this.$http.get('/api/citylist')
-      .then((res) => {
-        if (res.status >= 200 && res.status < 300 || res.status === 304) {
-          if (res.data.errno === SUC_CODE) {
-            this.allCity = res.data.data
-          }
-        }
-      })
+    // this.$http.get('/api/citylist')
+    //   .then((res) => {
+    //     if (res.status >= 200 && res.status < 300 || res.status === 304) {
+    //       if (res.data.errno === SUC_CODE) {
+    //         this.allCity = res.data.data
+    //       }
+    //     }
+    //   })
   },
   computed: {
     curCity() {
@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     showList() {
-      this.$refs.cityList.showList()
+      this.$store.commit('showCityList')
     }
   },
   components: {
@@ -76,10 +76,13 @@ export default {
 </script>
 
 <style lang="scss">
+
   .header-wrapper{
+    position: relative;
     padding: 10px;
     // box-sizing: border-box;
     box-shadow: 0px 4px 3px rgba(0, 0, 0, .1);
+    z-index: 10;
     .header {
       display: flex;
       justify-content: space-between;
@@ -106,6 +109,7 @@ export default {
       // margin-bottom: 10px;
       overflow: hidden;
       white-space:nowrap;
+      // z-index: 5;
       ul {
         width: 387px;
         font-size:0;
