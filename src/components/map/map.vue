@@ -37,7 +37,6 @@ export default {
       // 定位城市(与curcity不同，该对象根据定位结果做出更改而不随用户点击更改)
       this.myCity = _DEFAULT_CITY && _DEFAULT_CITY.city ? _DEFAULT_CITY : undefined
       if (!this.myCity) {
-        console.log(`no mycity`)
         this.geolocation.getIpLocation((position) => {
           this.myCity = postion
           this.myLatLng = new qq.maps.LatLng(position.lag, position.lng)
@@ -78,6 +77,8 @@ export default {
       this.geolocation.getIpLocation(this.moveCenter, this.getLocationFailed, {timeout: 3000})
     },
     moveCenter(position) {
+      this.$store.commit('changeCity', position.city)
+      // console.log(position)
       this.myLatLng = new qq.maps.LatLng(position.lat, position.lng)
       this.map.panTo(this.myLatLng)
       this.getAddress()
@@ -85,6 +86,7 @@ export default {
     getAddress() {
       this.laglngToLocation.getAddress(this.myLatLng)
       this.laglngToLocation.setComplete((result) => {
+        // console.log(result.detail)
         this.address = result.detail.nearPois[0].name
         this.$store.commit('changeAddress', this.address)
       })
@@ -103,8 +105,8 @@ export default {
       if (newCity === this.myCity.city) {
         this.getLocation()
       } else {
-        let newAddress = newCity + '市政府'
-        this.address = '正在获取你的位置'
+        let newAddress = newCity + '政府'
+        // this.address = '正在获取你的位置'
         this.locationToLatlng = new qq.maps.Geocoder()
         this.locationToLatlng.getLocation(newAddress)
         this.locationToLatlng.setComplete((result) => {
