@@ -1,10 +1,11 @@
 <template>
   <div id="app">
-    <!-- <v-header></v-header> -->
+    <v-header></v-header>
     <!-- <router-view></router-view> -->
-    <!-- <v-map></v-map> -->
-    <!-- <map-input :allCity="allCity"></map-input> -->
+    <v-map></v-map>
+    <map-input></map-input>
     <List></List>
+    <!-- <button @click="test">12321</button> -->
   </div>
 </template>
 
@@ -12,9 +13,7 @@
 import Header from '@@/header/Header'
 import vMap from '@@/map/Map'
 import MapInput from '@@/mapinput/MapInput'
-import City from '@@/city/City'
 import List from '@@/list/List'
-const SUC_CODE = 0
 
 export default {
   name: 'app',
@@ -27,6 +26,11 @@ export default {
   beforeMount() {
     let a = document.getElementById('box-wrapper')
     document.body.removeChild(a)
+  },
+  methods: {
+    test() {
+      this.$store.commit('showList', {})
+    }
   }
 }
 </script>
