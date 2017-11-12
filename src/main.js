@@ -27,9 +27,9 @@ const store = new Vuex.Store({
   state: {
     curCity: '获取城市中',
     address: '正在获取你的地点',
-    listShowFlag: true,
+    listShowFlag: false,
     pHolder: '',
-    listType: 0,
+    listType: 1,
     cityInput: '',
     locationInput: ''
     // allCity: allCity
@@ -43,7 +43,6 @@ const store = new Vuex.Store({
     },
     showList(state, payload) {
       state.listShowFlag = true
-      state.pHolder = payload.pHolder
     },
     hideList(state) {
       state.listShowFlag = false
