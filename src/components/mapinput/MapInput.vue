@@ -10,11 +10,17 @@
       <transition name="rotate-in">
         <div class="appointment" ref="appointment" v-show="!nowFlag"><span class="icon"><Icon name="clock-o"></Icon></span>预约时间</div>
       </transition>
-      <div class="address address-from">
+      <div class="address address-from" 
+        @touchstart="highlight($event)" 
+        @touchend="normalize($event)"
+        @click="showLocationList_from">
         <span class="dot"></span>
         <span class="text">{{myAddress}}</span>
       </div>
-      <div class="address address-to">
+      <div class="address address-to" 
+        @touchstart="highlight($event)" 
+        @touchend="normalize($event)"
+        @click="showLocationList_to">
         <span class="dot"></span>
         <span class="text">你要在哪撸猫<span class="mic"><span class="icon"><Icon name="microphone"></Icon></span></span></span>
       </div>
@@ -23,24 +29,23 @@
 </template>
 
 <script>
+import LocationList from '@@/locationlist/LocationList'
+import City from '@@/city/City'
 import Icon from 'vue-awesome/components/Icon'
 const TIME_TYPE_NOW = 0
+const LOCATION_LIST = 1
 export default {
-  props: {
-    address: {
-      type: String,
-      default: '正在获取你的地点'
-    }
-  },
   data() {
     return {
-      nowFlag: true
-      // myAddress: this.address
+      nowFlag: true,
+      addressFromHighlight: false,
+      addresstoHighlight: false,
+      currentView: LocationList
     }
   },
   computed: {
     myAddress() {
-      return this.address
+      return this.$store.state.address
     }
   },
   methods: {
@@ -48,18 +53,39 @@ export default {
       if (type === TIME_TYPE_NOW) {
         this.$refs['active-circle'].style.transform = ''
         this.nowFlag = true
-        // this.$refs.appointment.style.transform = 'rotateX(90deg)'
-        // this.$refs['time-type'].style.transform = 'translateY(0px)'
       } else {
         this.$refs['active-circle'].style.transform = 'translateX(100%)'
         this.nowFlag = false
-        // this.$refs.appointment.style.transform = 'rotateX(0)'
-        // this.$refs['time-type'].style.transform = 'translateY(-50px)'
       }
+    },
+    highlight(ev) {
+      ev.currentTarget.classList.add('active')
+    },
+    normalize(ev) {
+      ev.currentTarget.classList.remove('active')
+    },
+    showLocationList() {
+      this.$store.commit('showList')
+    },
+    showLocationList_from() {
+      this.showLocationList()
+      this.$store.commit('toggleList', {
+        pHolder: '从哪开始撸猫',
+        listType: LOCATION_LIST
+      })
+    },
+    showLocationList_to() {
+      this.showLocationList()
+      this.$store.commit('toggleList', {
+        pHolder: '去哪撸猫呢',
+        listType: LOCATION_LIST
+      })
     }
   },
   components: {
-    Icon
+    Icon,
+    LocationList,
+    City
   }
 }
 </script>
@@ -71,7 +97,7 @@ export default {
   left: 2%;
   right: 2%;
   bottom: 2%;
-  z-index: 50;
+  z-index: 10;
   .time-type {
     position: absolute;
     top: -32px;
@@ -83,20 +109,21 @@ export default {
     box-shadow: 1px 1px 1px rgba(0, 0, 0, .1), -1px -1px 1px rgba(0, 0, 0, .1);
     background-color: #ececec;
     transition: all .3s;
+    z-index: -2;
     .text {
       display: inline-block;
       width: 50px;
       text-align: center;
       font-size: 12px;
       background: transparent;
-      z-index: 1;
+      // z-index: 1;
       &.active {
         position: absolute;
         height: 30px;
         border-radius: 14px;
         background-color: #fff;
         transition: all .3s linear;
-        z-index: 0;
+        z-index: -1;
       }
     }
   }
@@ -118,10 +145,9 @@ export default {
       height: 50px;
       line-height: 50px;
       text-align: center;
+      font-size: 14px;
       // transition: all .3s;
       transform-origin: center top;
-      // z-index: -1;
-      // transform: rotateX(90deg);
       @include border-1px-bottom;
       &.rotate-in-enter-active, &.rotate-in-leave-active {
         transition: all .3s
@@ -130,9 +156,9 @@ export default {
         transform: rotateX(90deg);
         height: 0px;
       }
-      // &.rotate-in-leave-to {
-      //   transform: rotateX(90deg);
-      // }
+      .icon {
+        margin-right: 3px;
+      }
     }
     .address {
       display: flex;
@@ -140,6 +166,9 @@ export default {
       flex: 1 1 0;
       line-height: 50px;
       font-size: 14px;
+      &.active {
+        background-color: rgba(230, 230, 230, .5)
+      };
       .dot {
         width: 5px;
         height: 5px;

@@ -4,7 +4,7 @@
     <div class="user">
       <Icon name="user" scale="1.5"></Icon>
     </div>
-    <div class="city" @click="showList"><span class="text">{{curCity}}</span><span class="icon"><Icon name="angle-down"></Icon></span></div>
+    <div class="city" @click="showCityList"><span class="text">{{curCity}}</span><span class="icon"><Icon name="angle-down"></Icon></span></div>
     <div class="message">
       <Icon name="reorder" scale="1.5"></Icon>
     </div>
@@ -32,7 +32,7 @@
 import Icon from 'vue-awesome/components/Icon'
 import BScroll from 'better-scroll'
 import City from '@@/city/City'
-
+const CITY_LIST = 0
 // const SUC_CODE = 0
 export default {
   // data() {
@@ -64,8 +64,14 @@ export default {
     }
   },
   methods: {
-    showList() {
-      this.$store.commit('showCityList')
+    showCityList() {
+      this.$store.commit('showList', {
+        // pHolder: '城市中文名或拼音'
+      })
+      this.$store.commit('toggleList', {
+        pHolder: '城市中文名或拼音',
+        listType: CITY_LIST
+      })
     }
   },
   components: {
@@ -92,7 +98,9 @@ export default {
         // margin-left: 5px;
       }
       .city {
-        line-height: 34px;
+        line-height: 30px;
+        // padding-bottom: 10px;
+        // margin-bottom: 10px;
         .text {
           display: inline-block;
           margin-right: 5px;

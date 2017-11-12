@@ -30,11 +30,11 @@ export default {
       this.currentLetter = this.sequenceLetter[index]
       let touch = ev.changedTouches[0]
       this.touch.y1 = touch.pageY
-      this.$emit('onTouchstart', index)
+      this.$emit('listNavTouchstart', index)
     },
     onTouchend(ev) {
       this.letterShowFlag = false
-      this.$emit('onTouchend')
+      this.$emit('listNavTouchend')
     },
     onTouchmove(ev, index) {
       let touch = ev.changedTouches[0]
@@ -47,7 +47,7 @@ export default {
         index = 0
       }
       this.currentLetter = this.sequenceLetter[index]
-      this.$emit('onTouchmove', index)
+      this.$emit('listNavTouchmove', index)
     }
   }
 }
