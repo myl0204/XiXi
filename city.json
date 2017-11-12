@@ -218,6 +218,14 @@
       {
         "name": "深圳市",
         "eName": "shenzhen"
+      },
+      {
+        "name": "沈阳市",
+        "eName": "shenyang"
+      },
+      {
+        "name": "上海市",
+        "eName": "shanghai"
       }
     ]
   },
