@@ -27,12 +27,13 @@ const store = new Vuex.Store({
   state: {
     curCity: '获取城市中',
     address: '正在获取你的地点',
+    nearPois: [],
     listShowFlag: false,
     pHolder: '',
     listType: 1,
+    listSubType: 0,
     cityInput: '',
     locationInput: ''
-    // allCity: allCity
   },
   mutations: {
     changeCity(state, newCity) {
@@ -41,7 +42,10 @@ const store = new Vuex.Store({
     changeAddress(state, newAddr) {
       state.address = newAddr
     },
-    showList(state, payload) {
+    changePois(state, newPois) {
+      state.nearPois = newPois
+    },
+    showList(state) {
       state.listShowFlag = true
     },
     hideList(state) {
@@ -51,6 +55,7 @@ const store = new Vuex.Store({
     toggleList(state, payload) {
       state.listType = payload.listType
       state.pHolder = payload.pHolder
+      state.listSubType = payload.listSubType
     },
     cityInputChanged(state, newVal) {
       state.cityInput = newVal

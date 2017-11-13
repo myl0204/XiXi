@@ -1,6 +1,30 @@
 <template>
   <div class="location-list" ref="listWrapper">
-    <ul>
+    <ul v-if="listSubType === 1 && !validInput">
+      <li 
+        class="location-item"
+        v-for="poi in nearPois" 
+        :key="poi.id" 
+        ref="list" 
+        @touchstart="highlightPoi($event)"
+        @touchend="normalizePoi($event)"
+      >
+        {{poi.name}}
+      </li>
+    </ul>
+    <ul v-else-if="listSubType === 2 && !validInput">
+      <li 
+        class="location-item"
+        v-for="poi in suggestedPois" 
+        :key="poi.id" 
+        ref="list" 
+        @touchstart="highlightPoi($event)"
+        @touchend="normalizePoi($event)"
+      >
+        {{poi.name}}
+      </li>
+    </ul>
+    <ul v-else>
       <li 
         class="location-item"
         v-for="poi in pois" 
@@ -28,11 +52,6 @@ import Icon from 'vue-awesome/components/Icon'
 import BScroll from 'better-scroll'
 import debounce from 'lodash.debounce'
 export default {
-  // props: {
-  //   Poi: {
-  //     type: Object
-  //   }
-  // },
   mounted() {
     this.scroll = new BScroll(this.$refs.listWrapper, {
       click: true,
@@ -44,7 +63,9 @@ export default {
   data() {
     return {
       infoShowFlag: false,
-      pois: []
+      pois: [],
+      suggestedPois: [], // 当前address建议的pois,终点
+      searchCount: 0
     }
   },
   computed: {
@@ -53,6 +74,17 @@ export default {
     },
     input() {
       return this.$store.state.locationInput
+    },
+    listSubType() {
+      return this.$store.state.listSubType
+    },
+    // 当前address附近的pois,起点
+    nearPois() {
+      return this.$store.state.nearPois
+    },
+    // 有效输入，过滤例如'   '这种输入
+    validInput() {
+      return this.input.replace(/\s/g, '')
     }
   },
   methods: {
@@ -62,34 +94,46 @@ export default {
     normalizePoi(ev) {
       ev.target.classList.remove('active')
     },
-    test(obj) {
-      this.pois = obj.detail.pois
+    search: debounce(function(val) {
+      this.searchService.search(val)
+    }, 300),
+    searchCompleted(result) {
+      if (this.searchCount === 0) {
+        this.suggestedPois = result.detail.pois
+      }
+      this.searchCount++
+      this.pois = result.detail.pois
       this.infoShowFlag = false
       // console.log(this.pois)
       this.$nextTick(() => {
         this.scroll.refresh()
       })
     },
-    search: debounce(function(val) {
-      this.searchService.search(val)
-    }, 300),
     initSearchService() {
       this.searchService = new qq.maps.SearchService({
-        complete: this.test,
+        complete: this.searchCompleted,
         autoExtend: false,
         location: this.curCity,
         pageCapacity: 20
       })
+    },
+    initSuggestedPois() {
+      this.searchCount = 0
+      this.searchService.search(this.curCity)
     }
   },
   watch: {
     input(newVal) {
       this.infoShowFlag = true
-      this.search(newVal)
-    },
-    curCity(newCity) {
-      this.searchService.setLocation(newCity)
-      console.log(this.searchService, 2)
+      // 去除空格部分
+      newVal = newVal.replace(/\s/g, '')
+      if (newVal === '') {
+        setTimeout(() => {
+          this.infoShowFlag = false
+        }, 300)
+      } else {
+        this.search(newVal)
+      }
     }
   },
   components: {

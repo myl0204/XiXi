@@ -33,6 +33,7 @@ import Icon from 'vue-awesome/components/Icon'
 import BScroll from 'better-scroll'
 import City from '@@/city/City'
 const CITY_LIST = 0
+const DEFALUT_LISTSUBTYPE = 0
 // const SUC_CODE = 0
 export default {
   // data() {
@@ -70,7 +71,8 @@ export default {
       })
       this.$store.commit('toggleList', {
         pHolder: '城市中文名或拼音',
-        listType: CITY_LIST
+        listType: CITY_LIST,
+        listSubType: DEFALUT_LISTSUBTYPE
       })
     }
   },
@@ -99,8 +101,6 @@ export default {
       }
       .city {
         line-height: 30px;
-        // padding-bottom: 10px;
-        // margin-bottom: 10px;
         .text {
           display: inline-block;
           margin-right: 5px;

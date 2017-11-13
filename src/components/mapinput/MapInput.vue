@@ -13,14 +13,14 @@
       <div class="address address-from" 
         @touchstart="highlight($event)" 
         @touchend="normalize($event)"
-        @click="showLocationList_from">
+        @click="showLocationList(locationListTypeFrom)">
         <span class="dot"></span>
         <span class="text">{{myAddress}}</span>
       </div>
       <div class="address address-to" 
         @touchstart="highlight($event)" 
         @touchend="normalize($event)"
-        @click="showLocationList_to">
+        @click="showLocationList(locationListTypeTo)">
         <span class="dot"></span>
         <span class="text">你要在哪撸猫<span class="mic"><span class="icon"><Icon name="microphone"></Icon></span></span></span>
       </div>
@@ -29,18 +29,27 @@
 </template>
 
 <script>
-import LocationList from '@@/locationlist/LocationList'
 import City from '@@/city/City'
 import Icon from 'vue-awesome/components/Icon'
 const TIME_TYPE_NOW = 0
 const LOCATION_LIST = 1
+/* eslint-disable no-unused-vars */
+const LOCATION_FROM_LISTSUBTYPE = 1
+const LOCATION_TO_LISTSUBTYPE = 2
 export default {
   data() {
     return {
       nowFlag: true,
       addressFromHighlight: false,
       addresstoHighlight: false,
-      currentView: LocationList
+      locationListTypeFrom: {
+        listSubType: LOCATION_FROM_LISTSUBTYPE,
+        pHolder: '从哪开始撸猫'
+      },
+      locationListTypeTo: {
+        listSubType: LOCATION_TO_LISTSUBTYPE,
+        pHolder: '去哪撸猫'
+      }
     }
   },
   computed: {
@@ -64,27 +73,23 @@ export default {
     normalize(ev) {
       ev.currentTarget.classList.remove('active')
     },
-    showLocationList() {
+    // showLocationList() {
+    //   this.$store.commit('showList')
+    // },
+    showLocationList(type) {
+      // console.log(type)
+      let {listSubType, pHolder} = type
+      console.log(listSubType, pHolder)
       this.$store.commit('showList')
-    },
-    showLocationList_from() {
-      this.showLocationList()
       this.$store.commit('toggleList', {
-        pHolder: '从哪开始撸猫',
-        listType: LOCATION_LIST
-      })
-    },
-    showLocationList_to() {
-      this.showLocationList()
-      this.$store.commit('toggleList', {
-        pHolder: '去哪撸猫呢',
-        listType: LOCATION_LIST
+        listType: LOCATION_LIST,
+        pHolder,
+        listSubType
       })
     }
   },
   components: {
     Icon,
-    LocationList,
     City
   }
 }

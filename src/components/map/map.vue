@@ -86,9 +86,11 @@ export default {
     getAddress() {
       this.laglngToLocation.getAddress(this.myLatLng)
       this.laglngToLocation.setComplete((result) => {
-        // console.log(result.detail)
+        console.log(result.detail)
+        let pois = result.detail.nearPois
         this.address = result.detail.nearPois[0].name
         this.$store.commit('changeAddress', this.address)
+        this.$store.commit('changePois', pois)
       })
     },
     getLocationFailed() {
