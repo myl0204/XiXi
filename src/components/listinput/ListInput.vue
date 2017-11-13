@@ -35,7 +35,6 @@ export default {
   },
   data() {
     return {
-      // input: '',
       iconShowFlag: true
     }
   },
@@ -74,9 +73,6 @@ export default {
 .list-input {
   display: flex;
   justify-content: flex-end;
-  // position: fixed;
-  // top: 0;
-  // left: 0;
   width: 100%;
   height: 40px;
   background-color: #fff;
@@ -107,10 +103,6 @@ export default {
     
   }
   .cancel {
-    // position: absolute;
-    // right: 0px;
-    // top: 0;
-    // flex: 0 1 1;
     height: 100%;
     line-height: 40px;
     font-size: 0;

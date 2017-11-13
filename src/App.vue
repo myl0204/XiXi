@@ -1,11 +1,9 @@
 <template>
   <div id="app">
     <v-header></v-header>
-    <!-- <router-view></router-view> -->
     <v-map></v-map>
     <map-input></map-input>
     <List></List>
-    <!-- <button @click="test">12321</button> -->
   </div>
 </template>
 

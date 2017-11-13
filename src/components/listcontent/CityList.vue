@@ -30,19 +30,18 @@ import listNav from '@@/listnav/listNav'
 const SUC_CODE = 0
 const FLAG_HEIGHT = 40
 export default {
-  props: {
-    listType: {
-      type: Number,
-      default: 0
-    }
-  },
+  // props: {
+  //   listType: {
+  //     type: Number,
+  //     default: 0
+  //   }
+  // },
   created() {
     this.$http.get('/api/citylist')
       .then((res) => {
         if (res.status >= 200 && res.status < 300 || res.status === 304) {
           if (res.data.errno === SUC_CODE) {
             this.allCity = res.data.data
-            console.log(this.allCity)
           }
         }
       })
@@ -189,15 +188,9 @@ export default {
     clearInput() {
       this.$store.commit('cityInputChanged', '')
     },
-    // touchstart(index) {
-    //   this._scroll(index)
-    // },
     hideLetter() {
       this.letterShowFlag = false
     },
-    // touchmove(index) {
-    //   this._scroll(index)
-    // },
     _scroll(index) {
       this.scroll.scrollToElement(this.$refs.list[index])
       this.scrollY = this.scroll.y
@@ -221,7 +214,6 @@ export default {
     },
     cityListToShow() {
       this.fixedFlag = this.cityListToShow[0].flag
-      console.log(this.fixedFlag)
       setTimeout(() => {
         this.scroll.refresh()
         this.scrollY = 0
@@ -257,7 +249,6 @@ export default {
   right: 2%;
   bottom: 0;
   box-shadow: 1px -1px 1px rgba(0, 0, 0, .2), -1px 0 1px rgba(0, 0, 0, .2);
-  // margin: 0 20px;
   overflow: hidden;
   
   .cur-city {
@@ -267,11 +258,9 @@ export default {
     line-height: 40px;
     background-color: #fff;
     z-index: 20;
-    // transform: translateZ(0)
   }
   .city-flag-fixed {
     position: absolute;
-    // top: 40px;
     width: 100%;
     padding: 0 20px;
     box-sizing: border-box;
@@ -290,9 +279,7 @@ export default {
     top: 40px;
     bottom: 0;
     background-color: #fff;
-    // padding: 0 20px;
     overflow: hidden;
-    // z-index: 20;
     .city-flag {
       padding: 0 20px;
       height: 40px;
