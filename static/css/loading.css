@@ -1,0 +1,72 @@
+/* #loading-page {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center
+} */
+
+#box-wrapper {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  perspective: 500px;
+}
+
+#box-wrapper .text {
+  position: absolute;
+  top: 80px;
+  left: -40px;
+  width: 200px;
+}
+
+#box-wrapper .box {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  animation: rotate-box 1.4s linear infinite
+}
+
+#box-wrapper .box .side {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 1px solid black;
+  
+}
+
+#box-wrapper .box .front {
+  transform: translateZ(20px)
+}
+
+#box-wrapper .box .behind {
+  transform: translateZ(-20px)
+}
+
+#box-wrapper .box .left {
+  transform: rotateY(90deg) translateZ(-20px)
+}
+
+#box-wrapper .box .right {
+  transform: rotateY(90deg) translateZ(20px)
+}
+
+#box-wrapper .box .top {
+  transform: rotateX(90deg) translateZ(-20px)
+}
+
+#box-wrapper .box .bottom {
+  transform: rotateX(90deg) translateZ(20px)
+}
+
+
+@keyframes rotate-box {
+  to {
+    transform: rotate3d(1, 1, 1, 360deg)
+  }
+}
