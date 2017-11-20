@@ -1,11 +1,14 @@
 <template>
   <div id="map-container" ref="map">
     <!-- <button class="btn" @click="getLocation">点我定位</button> -->
+    <span class="btn" @click="getLocation">
+      <Icon name="location-arrow"></Icon>
+    </span>
   </div>
 </template>
 
 <script>
-import mapInput from '@@/mapinput/MapInput'
+import Icon from 'vue-awesome/components/Icon'
 export default {
   data() {
     return {
@@ -14,7 +17,7 @@ export default {
     }
   },
   components: {
-    mapInput
+    Icon
   },
   mounted() {
     this.$nextTick(() => {
@@ -56,19 +59,9 @@ export default {
       }
       // js API，初始化地图类
       this.map = new qq.maps.Map(this.$refs.map, mapOptions)
-      this._initGetLocBtn()
+      // this._initGetLocBtn()
 
       // this.getLocation() 首次调用已经通过watch curCity来调用，不用再重复调用了
-    },
-    _initGetLocBtn() {
-      let locBtn = document.createElement('button')
-      locBtn.className = 'btn'
-      locBtn.innerText = 'dianwo'
-      locBtn.index = 1
-      locBtn.addEventListener('click', () => {
-        this.getLocation()
-      })
-      this.map.controls[qq.maps.ControlPosition.LEFT_TOP].push(locBtn)
     },
     getLocation() {
       this.geolocation.getLocation(this.moveCenter, this.getIpLocation, {timeout: 3000})
@@ -129,11 +122,18 @@ export default {
     top: 80px;
     bottom: 0;
     width: 100%;
-    z-index: -1;
+    z-index: -3;
     .btn {
       // width: 200px;
       // height: 200px;
-      position: relative;
+      position: absolute;
+      left: 2%;
+      bottom: 150px;
+      width: 18px;
+      height: 18px;
+      text-align: center;
+      background-color: #fff;
+      border: 1px solid #dedede;
       z-index: 10;
     }
   }
