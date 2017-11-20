@@ -122,6 +122,7 @@ export default {
     transition: all .15s linear
   }
   .cur-city {
+    padding-top: 3px;
     padding-right: 5px;
     font-size: 12px;
     @include border-1px-right;

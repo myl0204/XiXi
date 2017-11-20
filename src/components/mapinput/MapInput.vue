@@ -95,14 +95,13 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../../common/scss/mixin.scss';
 .input-wrapper {
   position: absolute;
   left: 2%;
   right: 2%;
   bottom: 2%;
-  z-index: 10;
   .time-type {
     position: absolute;
     top: -32px;
