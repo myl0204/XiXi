@@ -1,9 +1,10 @@
 <template>
 <div class="header-wrapper">
   <div class="header">
-    <div class="user">
+    <div class="user" @click="userClick">
       <Icon name="user" scale="1.5"></Icon>
     </div>
+    <!-- <User ref="user"></User> -->
     <div class="city" @click="showCityList"><span class="text">{{curCity}}</span><span class="icon"><Icon name="angle-down"></Icon></span></div>
     <div class="message">
       <Icon name="reorder" scale="1.5"></Icon>
@@ -32,8 +33,10 @@
 import Icon from 'vue-awesome/components/Icon'
 import BScroll from 'better-scroll'
 import City from '@@/city/City'
+import util from '@/common/js/util.js'
 const CITY_LIST = 0
 const DEFALUT_LISTSUBTYPE = 0
+const FIRST_STEP = 1
 // const SUC_CODE = 0
 export default {
   // data() {
@@ -65,10 +68,22 @@ export default {
     }
   },
   methods: {
+    userClick() {
+      const cookie = util.getCookie()
+      if (cookie.isLogged === 'true') {
+        this.showUser()
+      } else {
+        this.showLogInModal()
+      }
+    },
+    showUser() {
+      this.$store.commit('showUser')
+    },
+    showLogInModal() {
+      this.$store.commit('changeLogInStepTo', FIRST_STEP)
+    },
     showCityList() {
-      this.$store.commit('showList', {
-        // pHolder: '城市中文名或拼音'
-      })
+      this.$store.commit('showList')
       this.$store.commit('toggleList', {
         pHolder: '城市中文名或拼音',
         listType: CITY_LIST,
