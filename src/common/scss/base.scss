@@ -1,0 +1,13 @@
+$theme-color: #fc9153;
+$mask-color: rgba(37, 38, 54, .4);
+
+body {
+  overflow: hidden;
+}
+input {
+  height: 100%;
+  caret-color: $theme-color;
+  &:focus {
+    outline: none
+  }
+}
