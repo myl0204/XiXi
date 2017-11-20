@@ -156,8 +156,8 @@ export default {
   .location-item {
     position: relative;
     padding: 0 20px;
-    height: 40px;
-    line-height: 40px;
+    height: 60px;
+    line-height: 60px;
     @include border-1px-bottom;
     &.active {
       background-color: rgba(230, 230, 230, 0.5);
