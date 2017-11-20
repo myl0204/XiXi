@@ -33,7 +33,10 @@ const store = new Vuex.Store({
     listType: 1,
     listSubType: 0,
     cityInput: '',
-    locationInput: ''
+    locationInput: '',
+    userShowFlag: false,
+    currentUser: '',
+    logInStep: 0
   },
   mutations: {
     changeCity(state, newCity) {
@@ -62,6 +65,25 @@ const store = new Vuex.Store({
     },
     locationInputChanged(state, newVal) {
       state.locationInput = newVal
+    },
+    showUser(state) {
+      state.userShowFlag = true
+    },
+    hideUser(state) {
+      state.userShowFlag = false
+    },
+    // showLogIn(state) {
+    //   state.logInShowFlag = true
+    //   // state.uid = uid
+    // },
+    hideLogIn(state) {
+      state.logInShowFlag = false
+    },
+    changeUser(state, newUser) {
+      state.currentUser = newUser
+    },
+    changeLogInStepTo(state, step) {
+      state.logInStep = step
     }
   }
 })
