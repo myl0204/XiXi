@@ -1,0 +1,281 @@
+[
+  {
+    "flag": "★热门城市",
+    "cityList": [
+      {
+        "name": "北京市",
+        "eName": "beijing"
+      },
+      {
+        "name": "深圳市",
+        "eName": "shenzhen"
+      },
+      {
+        "name": "武汉市",
+        "eName": "wuhan"
+      },
+      {
+        "name": "广州市",
+        "eName": "guangzhou"
+      },
+      {
+        "name": "天津市",
+        "eName": "tianjin"
+      },
+      {
+        "name": "杭州市",
+        "eName": "hangzhou"
+      },
+      {
+        "name": "上海市",
+        "eName": "shanghai"
+      },
+      {
+        "name": "成都市",
+        "eName": "chengdu"
+      },
+      {
+        "name": "沈阳市",
+        "eName": "shenyang"
+      }
+    ]
+  },
+  {
+    "flag": "A",
+    "cityList": [
+      {
+        "name": "鞍山市",
+        "eName": "anshan"
+      },
+      {
+        "name": "安庆",
+        "eName": "anqing"
+      },
+      {
+        "name": "安阳市",
+        "eName": "anyang"
+      },
+      {
+        "name": "阿拉善盟",
+        "eName": "alashanmeng"
+      },
+      {
+        "name": "安顺市",
+        "eName": "anshun"
+      }
+    ]
+  },
+  {
+    "flag": "B",
+    "cityList": [
+      {
+        "name": "北京市",
+        "eName": "beijing"
+      },
+      {
+        "name": "保定市",
+        "eName": "baoding"
+      },
+      {
+        "name": "包头市",
+        "eName": "baotou"
+      }
+    ]
+  },
+  {
+    "flag": "C",
+    "cityList": [
+      {
+        "name": "成都市",
+        "eName": "chengdu"
+      },
+      {
+        "name": "重庆市",
+        "eName": "chongqing"
+      }
+    ]
+  },
+  {
+    "flag": "D",
+    "cityList": [
+      {
+        "name": "大连市",
+        "eName": "dalian"
+      }
+    ]
+  },
+  {
+    "flag": "E",
+    "cityList": [
+      {
+        "name": "鄂州市",
+        "eName": "ezhou"
+      }
+    ]
+  },
+  {
+    "flag": "F",
+    "cityList": [
+      {
+        "name": "福州市",
+        "eName": "fuzhou"
+      }
+    ]
+  },
+  {
+    "flag": "G",
+    "cityList": [
+      {
+        "name": "广州市",
+        "eName": "guangzhou"
+      }
+    ]
+  },
+  {
+    "flag": "H",
+    "cityList": [
+      {
+        "name": "杭州市",
+        "eName": "hangzhou"
+      }
+    ]
+  },
+  {
+    "flag": "J",
+    "cityList": [
+      {
+        "name": "济南市",
+        "eName": "jinan"
+      }
+    ]
+  },
+  {
+    "flag": "K",
+    "cityList": [
+      {
+        "name": "昆明市",
+        "eName": "kunming"
+      }
+    ]
+  },
+  {
+    "flag": "L",
+    "cityList": [
+      {
+        "name": "洛阳市",
+        "eName": "luoyang"
+      }
+    ]
+  },
+  {
+    "flag": "M",
+    "cityList": [
+      {
+        "name": "绵阳市",
+        "eName": "mianyang"
+      }
+    ]
+  },
+  {
+    "flag": "N",
+    "cityList": [
+      {
+        "name": "南京市",
+        "eName": "nanjing"
+      }
+    ]
+  },
+  {
+    "flag": "P",
+    "cityList": [
+      {
+        "name": "平顶山市",
+        "eName": "pingdingshan"
+      }
+    ]
+  },
+  {
+    "flag": "Q",
+    "cityList": [
+      {
+        "name": "青岛市",
+        "eName": "qingdao"
+      }
+    ]
+  },
+  {
+    "flag": "R",
+    "cityList": [
+      {
+        "name": "日照市",
+        "eName": "rizhao"
+      }
+    ]
+  },
+  {
+    "flag": "S",
+    "cityList": [
+      {
+        "name": "深圳市",
+        "eName": "shenzhen"
+      },
+      {
+        "name": "沈阳市",
+        "eName": "shenyang"
+      },
+      {
+        "name": "上海市",
+        "eName": "shanghai"
+      }
+    ]
+  },
+  {
+    "flag": "T",
+    "cityList": [
+      {
+        "name": "天津市",
+        "eName": "tianjin"
+      }
+    ]
+  },
+  {
+    "flag": "W",
+    "cityList": [
+      {
+        "name": "武汉市",
+        "eName": "wuhan"
+      },
+      {
+        "name": "温州市",
+        "eName": "wenzhou"
+      }
+    ]
+  },
+  {
+    "flag": "X",
+    "cityList": [
+      {
+        "name": "西安市",
+        "eName": "xian"
+      }
+    ]
+  },
+  {
+    "flag": "Y",
+    "cityList": [
+      {
+        "name": "烟台市",
+        "eName": "yantai"
+      }
+    ]
+  },
+  {
+    "flag": "Z",
+    "cityList": [
+      {
+        "name": "郑州市",
+        "eName": "zhengzhou"
+      }
+    ]
+  }
+]
