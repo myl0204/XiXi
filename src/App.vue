@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <v-header></v-header>
-    <v-map></v-map>
-    <map-input></map-input>
+    <v-map ref="map"></v-map>
+    <map-input @geoBtnClick="getLocation"></map-input>
     <List></List>
     <User></User>
     <LogIn></LogIn>
@@ -37,6 +37,11 @@ export default {
   beforeMount() {
     let a = document.getElementById('box-wrapper')
     document.body.removeChild(a)
+  },
+  methods: {
+    getLocation() {
+      this.$refs.map.getLocation()
+    }
   }
 }
 </script>

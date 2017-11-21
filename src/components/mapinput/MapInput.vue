@@ -1,5 +1,8 @@
 <template>
   <div class="input-wrapper">
+    <span class="btn" @click="clickGeoBtn">
+      <Icon name="location-arrow"></Icon>
+    </span>
     <div class="time-type" ref="time-type">
       <span class="text" @click="changeTimeType(0)">现在</span>
       <span class="text" @click="changeTimeType(1)">预约</span>
@@ -58,6 +61,9 @@ export default {
     }
   },
   methods: {
+    clickGeoBtn() {
+      this.$emit('geoBtnClick')
+    },
     changeTimeType(type) {
       if (type === TIME_TYPE_NOW) {
         this.$refs['active-circle'].style.transform = ''
@@ -98,10 +104,20 @@ export default {
 <style lang="scss" scoped>
 @import '../../common/scss/mixin.scss';
 .input-wrapper {
-  position: absolute;
+  position: fixed;
   left: 2%;
   right: 2%;
   bottom: 2%;
+  .btn {
+    position: absolute;
+    top: -60px;
+    width: 18px;
+    height: 18px;
+    text-align: center;
+    background-color: #fff;
+    border: 1px solid #dedede;
+    z-index: 10;
+  }
   .time-type {
     position: absolute;
     top: -32px;

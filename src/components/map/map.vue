@@ -1,9 +1,6 @@
 <template>
   <div id="map-container" ref="map">
     <!-- <button class="btn" @click="getLocation">点我定位</button> -->
-    <span class="btn" @click="getLocation">
-      <Icon name="location-arrow"></Icon>
-    </span>
   </div>
 </template>
 
@@ -123,18 +120,18 @@ export default {
     bottom: 0;
     width: 100%;
     z-index: -3;
-    .btn {
-      // width: 200px;
-      // height: 200px;
-      position: absolute;
-      left: 2%;
-      bottom: 150px;
-      width: 18px;
-      height: 18px;
-      text-align: center;
-      background-color: #fff;
-      border: 1px solid #dedede;
-      z-index: 10;
-    }
+    // .btn {
+    //   // width: 200px;
+    //   // height: 200px;
+    //   position: absolute;
+    //   left: 2%;
+    //   bottom: 150px;
+    //   width: 18px;
+    //   height: 18px;
+    //   text-align: center;
+    //   background-color: #fff;
+    //   border: 1px solid #dedede;
+    //   z-index: 10;
+    // }
   }
 </style>
