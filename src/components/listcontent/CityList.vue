@@ -4,7 +4,7 @@
     <h2 class="city-flag-fixed" ref="fixedFlag">{{fixedFlag}}</h2>
     <div class="other-city" ref="listWrapper">
       <ul>
-        <li v-for="cityObject in cityListToShow" :key="cityObject.flag" ref="list" v-show="cityObject.cityList && cityObject.cityList.length">
+        <li v-for="cityObject in cityListToShow" :key="cityObject.flag" ref="list">
           <h2 class="city-flag">{{cityObject.flag}}</h2>
           <ul @touchstart="highlightCity($event)" @touchend="normalizeCity($event)">
             <li v-for="city in cityObject.cityList" class="city-item" 
@@ -144,28 +144,22 @@ export default {
         } else {
           return [{}]
         }
-      } else {
+      } else { // 汉字情况
         let result = []
         let nameReg = new RegExp(this.input)
-        result = this.allCity.map((cityListObj) => {
+        this.allCity.forEach((cityListObj) => {
           let cityList = cityListObj['cityList'].filter((cityObj) => {
             return cityObj.name.match(nameReg)
           })
-          // debugger
-          return {flag: cityListObj['flag'], cityList}
+          if (cityList.length) {
+            result.push({flag: cityListObj['flag'], cityList})
+          }
         })
         return result
       }
     },
     infoShowFlag() {
-      let result = false
-      this.cityListToShow.forEach((cityObj) => {
-        if (cityObj.cityList && cityObj.cityList.length) {
-          result = true
-          return
-        }
-      })
-      return result
+      return !(!this.cityListToShow[0] || !this.cityListToShow[0].flag)
     },
     sequenceLetter() {
       return this.allCity.map((val) => {
@@ -213,11 +207,14 @@ export default {
       }
     },
     cityListToShow() {
-      this.fixedFlag = this.cityListToShow[0].flag
-      setTimeout(() => {
-        this.scroll.refresh()
-        this.scrollY = 0
-      }, 20)
+      let hasResult = !!this.cityListToShow[0]
+      if (hasResult) {
+        this.fixedFlag = this.cityListToShow[0].flag
+        setTimeout(() => {
+          this.scroll.refresh()
+          this.scrollY = 0
+        }, 20)
+      }
     },
     scrollY(newVal) {
       let listHeight = this.listHeight

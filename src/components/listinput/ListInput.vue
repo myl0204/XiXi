@@ -5,7 +5,6 @@
     <div class="input city-input">
       <input 
         type="text" 
-        autofocus
         :placeholder="pHolder" 
         :value="input" 
         @input="inputChanged($event)"
