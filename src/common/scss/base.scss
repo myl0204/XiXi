@@ -2,6 +2,7 @@ $theme-color: #fc9153;
 $mask-color: rgba(37, 38, 54, .4);
 
 body {
+  position: relative;
   overflow: hidden;
 }
 input {
