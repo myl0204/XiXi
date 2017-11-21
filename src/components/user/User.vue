@@ -1,5 +1,5 @@
 <template>
-<transition :name="transitionName">
+<transition :name="transitionName" @before-enter="beforeEnter">
   <div class="user-wrapper" v-show="showFlag">
     <div class="mask" @click="maskClick"></div>
     <div class="user-content">
@@ -45,7 +45,7 @@
         @touchend="onOtherContentTouchEnd"
         @touchmove="moveUpOtherContent">
         <span class="icon" @click="toggleContent">
-          <Icon name="angle-up" :class="{'fa-flip-vertical': atDownStatus}" class="icon-self"></Icon>
+          <Icon name="angle-up" :class="{'fa-flip-vertical': !atBottom}" class="icon-self"></Icon>
         </span>
         <div class="content-wrapper">
           <div class="content">
@@ -185,7 +185,7 @@ export default {
       touch: {},
       currentDiff: 0,
       deviceHeight: 0,
-      atDownStatus: false,
+      atBottom: false,
       transitionName: 'slide'
     }
   },
@@ -203,7 +203,10 @@ export default {
   },
   methods: {
     toggleContent() {
-      this.atDownStatus ? this.contentMoveToBottom() : this.contentMoveToTop()
+      this.atBottom ? this.contentMoveToTop() : this.contentMoveToBottom()
+    },
+    beforeEnter() {
+      this.atBottom ? '' : this.contentMoveToBottom()
     },
     logOut() {
       util.delCookie('isLogged')
@@ -223,7 +226,7 @@ export default {
       this.$refs.optionsMask.style.background = `rgba(255, 255, 255, .5)`
       this.$refs.optionsMask.style.transition = `background .2s linear`
       setTimeout(() => {
-        this.atDownStatus = true
+        this.atBottom = false
       }, 200)
     },
     contentMoveToBottom() {
@@ -238,7 +241,7 @@ export default {
       this.$refs.optionsMask.style.background = `rgba(255, 255, 255, 0)`
       this.$refs.optionsMask.style.transition = `background .2s linear`
       setTimeout(() => {
-        this.atDownStatus = false
+        this.atBottom = true
       }, 200)
     },
     onOtherContentTouchStart(ev) {
