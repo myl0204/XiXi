@@ -27,24 +27,13 @@
 // import Icon from 'vue-awesome/components/Icon'
 import BScroll from 'better-scroll'
 import listNav from '@@/listnav/listNav'
-const SUC_CODE = 0
 const FLAG_HEIGHT = 40
 export default {
-  // props: {
-  //   listType: {
-  //     type: Number,
-  //     default: 0
-  //   }
-  // },
-  created() {
-    this.$http.get('/api/citylist')
-      .then((res) => {
-        if (res.status >= 200 && res.status < 300 || res.status === 304) {
-          if (res.data.errno === SUC_CODE) {
-            this.allCity = res.data.data
-          }
-        }
-      })
+  props: {
+    allCity: {
+      type: Array,
+      default: [{}]
+    }
   },
   mounted() {
     this.scroll = new BScroll(this.$refs.listWrapper, {
@@ -61,7 +50,6 @@ export default {
   },
   data() {
     return {
-      allCity: [],
       scrollY: -1,
       fixedFlag: '★热门城市'
     }

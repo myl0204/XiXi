@@ -14,7 +14,7 @@
           <input type="text" placeholder="你从哪开始撸猫" :value="locationInput">
         </div>
       </list-input>
-      <component :is="listView" @city-changed="chooseCity" ref="listContent"></component>
+      <component :is="listView" :allCity="listType === 1 ? '' : allCity" @city-changed="chooseCity" ref="listContent"></component>
     </div> 
   </transition>
 </template>
@@ -24,12 +24,28 @@ import Icon from 'vue-awesome/components/Icon'
 import ListInput from '@@/listinput/ListInput'
 import CityList from '@@/listcontent/CityList'
 import LocationList from '@@/listcontent/LocationList'
+const SUC_CODE = 0
 const CITY_LIST = 0
 const LOCATION_LIST = 1
 const MIXINPUT_LIST = 2
 const DEFALUT_LISTSUBTYPE = 0
 const LOCATION_TO_LISTSUBTYPE = 2
 export default {
+  data() {
+    return {
+      allCity: [{}]
+    }
+  },
+  created() {
+    this.$http.get('/api/citylist')
+      .then((res) => {
+        if (res.status >= 200 && res.status < 300 || res.status === 304) {
+          if (res.data.errno === SUC_CODE) {
+            this.allCity = res.data.data
+          }
+        }
+      })
+  },
   computed: {
     curCity() {
       return this.$store.state.curCity
