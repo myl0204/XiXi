@@ -27,6 +27,10 @@ const store = new Vuex.Store({
   state: {
     curCity: '获取城市中',
     address: '正在获取你的地点',
+    customAddress: {
+      name: '',
+      latLng: {}
+    },
     nearPois: [],
     listShowFlag: false,
     pHolder: '',
@@ -45,6 +49,9 @@ const store = new Vuex.Store({
     changeAddress(state, newAddr) {
       state.address = newAddr
     },
+    changeCustomAddress(state, newAddr) {
+      state.customAddress = newAddr
+    },
     changePois(state, newPois) {
       state.nearPois = newPois
     },
@@ -53,7 +60,6 @@ const store = new Vuex.Store({
     },
     hideList(state) {
       state.listShowFlag = false
-      state.pHolder = ''
     },
     toggleList(state, payload) {
       state.listType = payload.listType

@@ -3,9 +3,10 @@
     <ul v-if="listSubType === 1 && !validInput">
       <li 
         class="location-item"
-        v-for="poi in nearPois" 
+        v-for="(poi, index) in nearPois" 
         :key="poi.id" 
         ref="list" 
+        @click="changeCurrentLocation($event, index)"
         @touchstart="highlightPoi($event)"
         @touchend="normalizePoi($event)"
       >
@@ -15,9 +16,10 @@
     <ul v-else-if="listSubType === 2 && !validInput">
       <li 
         class="location-item"
-        v-for="poi in suggestedPois" 
+        v-for="(poi, index) in suggestedPois" 
         :key="poi.id" 
-        ref="list" 
+        ref="list"
+        @click="changeDestination($event, index)"
         @touchstart="highlightPoi($event)"
         @touchend="normalizePoi($event)"
       >
@@ -27,9 +29,10 @@
     <ul v-else>
       <li 
         class="location-item"
-        v-for="poi in pois" 
+        v-for="(poi, index) in pois" 
         :key="poi.id" 
         ref="list" 
+        @click="changeLocation($event, index)"
         @touchstart="highlightPoi($event)"
         @touchend="normalizePoi($event)"
       >
@@ -59,6 +62,7 @@ export default {
     })
     /* eslint-disable no-undef */
     this.initSearchService()
+    this.initSuggestedPois()
   },
   data() {
     return {
@@ -101,15 +105,16 @@ export default {
       if (this.searchCount === 0) {
         this.suggestedPois = result.detail.pois
       }
+      console.log(result)
       this.searchCount++
       this.pois = result.detail.pois
       this.infoShowFlag = false
-      // console.log(this.pois)
       this.$nextTick(() => {
         this.scroll.refresh()
       })
     },
     initSearchService() {
+      console.log(this.curCity)
       this.searchService = new qq.maps.SearchService({
         complete: this.searchCompleted,
         autoExtend: false,
@@ -120,6 +125,28 @@ export default {
     initSuggestedPois() {
       this.searchCount = 0
       this.searchService.search(this.curCity)
+    },
+    changeCurrentLocation(ev, index, pois) {
+      if (!pois) {
+        pois = this.nearPois
+      }
+      let poi = pois[index]
+      let address = {
+        name: poi.name,
+        latLng: poi.latLng
+      }
+      this.$store.commit('changeCustomAddress', address)
+      this.$store.commit('hideList')
+    },
+    changeDestination(ev, index) {
+      this.$store.commit('hideList')
+    },
+    changeLocation(ev, index) {
+      if (this.listSubType === 1) {
+        this.changeCurrentLocation(ev, index, this.pois)
+      } else {
+        this.changeDestination(ev, index)
+      }
     }
   },
   watch: {
@@ -134,6 +161,9 @@ export default {
       } else {
         this.search(newVal)
       }
+    },
+    curCity(newCity) {
+      this.searchService.setLocation(newCity)
     }
   },
   components: {

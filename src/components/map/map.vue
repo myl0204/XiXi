@@ -24,6 +24,9 @@ export default {
   computed: {
     curCity() {
       return this.$store.state.curCity
+    },
+    customAddress() {
+      return this.$store.state.customAddress
     }
   },
   methods: {
@@ -67,7 +70,9 @@ export default {
       this.geolocation.getIpLocation(this.moveCenter, this.getLocationFailed, {timeout: 3000})
     },
     moveCenter(position) {
-      this.$store.commit('changeCity', position.city)
+      if (position.city) {
+        this.$store.commit('changeCity', position.city)
+      }
       // console.log(position)
       this.myLatLng = new qq.maps.LatLng(position.lat, position.lng)
       this.map.panTo(this.myLatLng)
@@ -76,7 +81,6 @@ export default {
     getAddress() {
       this.laglngToLocation.getAddress(this.myLatLng)
       this.laglngToLocation.setComplete((result) => {
-        console.log(result.detail)
         let pois = result.detail.nearPois
         this.address = result.detail.nearPois[0].name
         this.$store.commit('changeAddress', this.address)
@@ -99,7 +103,7 @@ export default {
       } else {
         let newAddress = newCity + '政府'
         // this.address = '正在获取你的位置'
-        this.locationToLatlng = new qq.maps.Geocoder()
+        // this.locationToLatlng = new qq.maps.Geocoder()
         this.locationToLatlng.getLocation(newAddress)
         this.locationToLatlng.setComplete((result) => {
           let {lat, lng} = result.detail.location
@@ -107,6 +111,13 @@ export default {
           this.getAddress()
         })
       }
+    },
+    customAddress(newAddr) {
+      let address = newAddr.name
+      let {lat, lng} = newAddr.latLng
+      let latLng = new qq.maps.LatLng(lat, lng)
+      this.map.panTo(latLng)
+      this.$store.commit('changeAddress', address)
     }
   }
 }
@@ -120,18 +131,5 @@ export default {
     bottom: 0;
     width: 100%;
     z-index: -3;
-    // .btn {
-    //   // width: 200px;
-    //   // height: 200px;
-    //   position: absolute;
-    //   left: 2%;
-    //   bottom: 150px;
-    //   width: 18px;
-    //   height: 18px;
-    //   text-align: center;
-    //   background-color: #fff;
-    //   border: 1px solid #dedede;
-    //   z-index: 10;
-    // }
   }
 </style>
