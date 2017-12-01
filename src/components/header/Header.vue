@@ -12,13 +12,13 @@
   </div>
   <div class="tab" ref="catType">
     <ul>
-      <li class="type">狸花猫</li>
-      <li class="type">波斯猫</li>
-      <li class="type">金吉拉</li>
-      <li class="type">美短</li>
-      <li class="type">英短</li>
-      <li class="type">橘猫</li>
-      <li class="type">加菲</li>
+      <router-link :to="{name: 'content', params: {catType: 'fast'}}" class="type">快猫</router-link>
+      <router-link :to="{name: 'content', params: {catType: 'rent'}}" class="type">出租猫</router-link>
+      <router-link :to="{name: 'content', params: {catType: 'special'}}" class="type">专猫</router-link>
+      <router-link :to="{name: 'content', params: {catType: 'sharing'}}" class="type">顺风猫</router-link>
+      <router-link :to="{name: 'content', params: {catType: 'substitute'}}" class="type">代撸</router-link>
+      <router-link :to="{name: 'content', params: {catType: 'second-hand'}}" class="type">二手猫</router-link>
+      <router-link :to="{name: 'content', params: {catType: 'cloud'}}" class="type">云撸猫</router-link>
     </ul>
     <div class="all-type">
       <icon name="th-large"></icon>
@@ -99,17 +99,17 @@ export default {
 </script>
 
 <style lang="scss">
-
+@import '../../common/scss/var.scss';
   .header-wrapper{
     position: relative;
-    padding: 10px;
-    // box-sizing: border-box;
-    box-shadow: 0px 4px 3px rgba(0, 0, 0, .1);
+    padding: 10px 10px 15px;
+    background-color: #fff;
+    box-shadow: 0px 4px 3px rgba(0, 0, 0, .2);
     z-index: 10;
     .header {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       // padding: 10px;
       .user {
         // margin-left: 5px;
@@ -134,18 +134,18 @@ export default {
       white-space:nowrap;
       // z-index: 5;
       ul {
-        width: 387px;
+        width: 425px;
         font-size:0;
         .type {
           display: inline-block;
-          font-size: 16px;
+          font-size: 14px;
           font-weight: 200;
           color: #000;
-          &.current {
-            color: orange;
+          &.router-active {
+            color: $theme-color
           }
           &:not(:last-child) {
-            margin-right: 15px;
+            margin-right: 25px;
           }
         }
       }

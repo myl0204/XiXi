@@ -1,9 +1,11 @@
 <template>
   <div id="app">
     <v-header></v-header>
-    <v-map ref="map"></v-map>
-    <map-input @geoBtnClick="getLocation"></map-input>
-    <List></List>
+    <!-- <router-link to="/"></router-link> -->
+    <router-view></router-view>
+    <!-- <v-map ref="map"></v-map> -->
+    <!-- <map-input @geoBtnClick="getLocation"></map-input> -->
+    <!-- <List></List> -->
     <User></User>
     <LogIn></LogIn>
   </div>
@@ -11,19 +13,19 @@
 
 <script>
 import Header from '@@/header/Header'
-import vMap from '@@/map/Map'
-import MapInput from '@@/mapinput/MapInput'
-import List from '@@/list/List'
 import LogIn from '@@/userlogin/LogIn'
 import User from '@@/user/User'
 import util from '@/common/js/util.js'
+import router from '@/router/index.js'
+router.push({name: 'content', params: {catType: 'fast'}})
 export default {
   name: 'app',
+  router,
   components: {
     'v-header': Header,
-    'v-map': vMap,
-    MapInput,
-    List,
+    // 'v-map': vMap,
+    // MapInput,
+    // List,
     User,
     LogIn
   },
