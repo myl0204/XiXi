@@ -10,17 +10,17 @@
     content: ' ';
     border-top: 1px solid $color;
     transform-origin: left 0;
-    @media (-webkit-m1in-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
+    @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
       width: 150%;
       -webkit-transform: scale(0.7);
       transform: scale(0.7)
     }
-    @media (-webkit-m1in-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
       width: 200%;
       -webkit-transform: scale(0.5);
       transform: scale(0.5)
     }
-    @media (-webkit-m1in-device-pixel-ratio: 3), (min-resolution: 3dppx) {
+    @media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 3dppx) {
       width: 300%;
       -webkit-transform: scale(0.333);
       transform: scale(0.333) 
@@ -40,17 +40,17 @@
     height: 0;
     border-bottom: 1px solid $color;
     transform-origin: left 0;
-    @media (-webkit-m1in-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
+    @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
       width: 150%;
       -webkit-transform: scale(0.7);
       transform: scale(0.7)
     }
-    @media (-webkit-m1in-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
       width: 200%;
       -webkit-transform: scale(0.5);
       transform: scale(0.5) 
     }
-    @media (-webkit-m1in-device-pixel-ratio: 3), (min-resolution: 3dppx) {
+    @media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 3dppx) {
       width: 300%;
       -webkit-transform: scale(0.333);
       transform: scale(0.333) 
@@ -68,19 +68,15 @@
     bottom: 20%;
     content: ' ';
     border-left: 1px solid $color;
-    transform-origin: center 0;
-    @media (-webkit-m1in-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
-      width: 150%;
+    @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
       -webkit-transform: scale(0.7);
       transform: scale(0.7)
     }
-    @media (-webkit-m1in-device-pixel-ratio: 2), (min-resolution: 2dppx) {
-      width: 200%;
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
       -webkit-transform: scale(0.5);
       transform: scale(0.5)
     }
-    @media (-webkit-m1in-device-pixel-ratio: 3), (min-resolution: 3dppx) {
-      width: 300%;
+    @media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 3dppx) {
       -webkit-transform: scale(0.333);
       transform: scale(0.333)
     }
@@ -97,17 +93,15 @@
     bottom: 20%;
     content: ' ';
     border-right: 1px solid $color;
-    transform-origin: center 0;
-    @media (-webkit-m1in-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
+    @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
       -webkit-transform: scale(0.7);
       transform: scale(0.7)
     }
-    @media (-webkit-m1in-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
       -webkit-transform: scale(0.5);
       transform: scale(0.5)
     }
-    @media (-webkit-m1in-device-pixel-ratio: 3), (min-resolution: 3dppx) {
-      width: 300%;
+    @media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 3dppx) {
       -webkit-transform: scale(0.333);
       transform: scale(0.333)
     }
@@ -125,15 +119,15 @@
     content: ' ';
     border-right: 1px solid $color;
     transform-origin: center 0;
-    @media (-webkit-m1in-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
+    @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
       -webkit-transform: scale(0.7);
       transform: scale(0.7)
     }
-    @media (-webkit-m1in-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
       -webkit-transform: scale(0.5);
       transform: scale(0.5)
     }
-    @media (-webkit-m1in-device-pixel-ratio: 3), (min-resolution: 3dppx) {
+    @media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 3dppx) {
       height: 300%;
       -webkit-transform: scale(0.333);
       transform: scale(0.333)
