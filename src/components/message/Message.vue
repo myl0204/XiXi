@@ -29,6 +29,10 @@ export default {
     isSpin: {
       type: Boolean,
       default: false
+    },
+    delay: {
+      type: Number,
+      default: 700
     }
   },
   data() {
@@ -39,7 +43,7 @@ export default {
   created() {
     setTimeout(() => {
       this.showFlag = false
-    }, 700)
+    }, this.delay)
   },
   components: {
     Icon,

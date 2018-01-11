@@ -20,11 +20,7 @@
           :class="{active: confirmIsActive}"
           @click="confirmClick">
           {{confirmText}}
-          <div class="dot-wrapper" v-show="loadingShowFlag">
-            <span class="dot dot-1"></span>
-            <span class="dot dot-2"></span>
-            <span class="dot dot-3"></span>
-          </div>
+          <loading :loadingShowFlag="loadingShowFlag"></loading>
         </a>
       </div>
     </div>
@@ -34,6 +30,7 @@
 
 <script>
 import Icon from 'vue-awesome/components/Icon'
+import Loading from '@@/loading/Loading'
 export default {
   props: {
     showFlag: {
@@ -113,7 +110,8 @@ export default {
     }
   },
   components: {
-    Icon
+    Icon,
+    Loading
   }
 }
 </script>
@@ -206,29 +204,29 @@ export default {
         &.active {
           background-color:  #3a3a3a;
         }
-        .dot-wrapper {
-          width: 100%;
-          height: 100%;
-          .dot {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: #fff;
-            &+.dot {
-              margin-left: 5px;
-            }
-            &.dot-1 {
-              animation: scale .5s infinite linear
-            }
-            &.dot-2 {
-              animation: scale .5s .1s infinite linear
-            }
-            &.dot-3 {
-              animation: scale .5s .2s infinite linear
-            }
-          }
-        }
+        // .dot-wrapper {
+        //   width: 100%;
+        //   height: 100%;
+        //   .dot {
+        //     display: inline-block;
+        //     width: 10px;
+        //     height: 10px;
+        //     border-radius: 50%;
+        //     background-color: #fff;
+        //     &+.dot {
+        //       margin-left: 5px;
+        //     }
+        //     &.dot-1 {
+        //       animation: scale .5s infinite linear
+        //     }
+        //     &.dot-2 {
+        //       animation: scale .5s .1s infinite linear
+        //     }
+        //     &.dot-3 {
+        //       animation: scale .5s .2s infinite linear
+        //     }
+        //   }
+        // }
       }
     }
   }
@@ -241,12 +239,12 @@ export default {
   }
 }
 
-@keyframes scale {
-  0% {
-    transform: scale(1.5)
-  }
-  20% {
-    transform: scale(1)
-  }
-}
+// @keyframes scale {
+//   0% {
+//     transform: scale(1.5)
+//   }
+//   20% {
+//     transform: scale(1)
+//   }
+// }
 </style>

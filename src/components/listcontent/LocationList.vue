@@ -114,7 +114,6 @@ export default {
       })
     },
     initSearchService() {
-      console.log(this.curCity)
       this.searchService = new qq.maps.SearchService({
         complete: this.searchCompleted,
         autoExtend: false,
@@ -133,9 +132,11 @@ export default {
       let poi = pois[index]
       let address = {
         name: poi.name,
-        latLng: poi.latLng
+        latLng: poi.latLng,
+        from: 0
       }
-      this.$store.commit('changeCustomAddress', address)
+      this.$store.commit('changeAddress', address)
+      this.$store.commit('locationInputChanged', '')
       this.$store.commit('hideList')
     },
     changeDestination(ev, index) {

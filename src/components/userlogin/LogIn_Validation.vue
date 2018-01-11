@@ -16,7 +16,7 @@
         <span v-else class="text" @click="resend">重新发送</span>
       </div>
       <div class="code-input">
-        <div class="input-wrapper" v-for="(item,index) in total">
+        <div class="input-wrapper" v-for="(item,index) in total" :key="index">
           <input 
             type="number" 
             :autofocus="index === 0" 
@@ -109,7 +109,6 @@ export default {
         // this.filledStatus.splice(index, 1, true)
         if (index < 3) {
           this.$refs.inputs[++index].focus()
-          console.log(index)
           this.currentIndex = index
         }
       } else {
@@ -154,7 +153,6 @@ export default {
     isFullFilled(newVal) {
       // 4个input全部填满
       if (newVal) {
-        console.log(this.validationCode)
         this.messageShowFlag = true
         this.$refs.inputs[this.currentIndex].blur()
         // 这里应该是和后端通信，登录成功

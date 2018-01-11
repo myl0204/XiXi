@@ -76,7 +76,7 @@ const util = {
     document.cookie = cookie
   },
   delCookie(name) {
-    document.cookie = `${name}= ; path=/; max-age=-1`
+    document.cookie = `${name}=; path=/XiXi; max-age=0`
   }
 }
 

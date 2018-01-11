@@ -138,23 +138,21 @@ export default {
     transition: all .15s linear
   }
   .cur-city {
-    padding-top: 3px;
     padding-right: 5px;
+    line-height: 40px;
     font-size: 12px;
     @include border-1px-right;
     .icon {
       position: relative;
-      display: inline-block;
-      // height: 100%;
       top: 3px;
+      display: inline-block;
       padding-right: 4px;
     }
     .text {
       display: inline-block;
-      // height: 100%;
       padding: 0 5px 0 15px;
       font-size: 12px;
-      line-height: 36px;
+      line-height: 40px;
     }
   }
 }

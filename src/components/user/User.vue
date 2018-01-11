@@ -248,8 +248,6 @@ export default {
       let touch = ev.changedTouches[0]
       this.touch.y1 = touch.pageY
       this.$refs.otherContent.style.transition = ''
-      // console.log(touch)
-      // console.log(`y1`, this.touch.y1)
     },
     onOtherContentTouchEnd(ev) {
       let touch = ev.changedTouches[0]

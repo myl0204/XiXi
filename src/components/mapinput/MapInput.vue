@@ -18,7 +18,7 @@
         @touchend="normalize($event)"
         @click="showLocationList(locationListTypeFrom)">
         <span class="dot"></span>
-        <span class="text">{{myAddress}}</span>
+        <span class="text">{{myAddress.name}}</span>
       </div>
       <div class="address address-to" 
         @touchstart="highlight($event)" 

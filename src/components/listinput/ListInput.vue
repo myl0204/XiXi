@@ -76,7 +76,6 @@ export default {
   height: 40px;
   background-color: #fff;
   box-shadow: 0 2px 1px rgba(0, 0, 0, .2);
-  // box-sizing: border-box;
   z-index: 30;
   .input {
     // 这里用padding来撑开高度的话会遮挡父级的box-shadow。
@@ -93,7 +92,6 @@ export default {
     input {
       width: 100%;
       height: 100%;
-      caret-color: #ff9800;
       &:focus {
         border: none;
         outline: none
