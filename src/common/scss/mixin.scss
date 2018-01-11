@@ -134,3 +134,12 @@
     }
   }
 }
+
+@mixin angle-arrow($width: 5px) {
+  position: absolute;
+  left: 50%;
+  border-width: $width;
+  border-style: solid;
+  box-shadow: 2px -2px 2px rgba(0, 0, 0, .2);
+  z-index: 10;
+}
