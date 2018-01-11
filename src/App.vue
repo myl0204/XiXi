@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" @touchmove.prevent="touchmove">
     <v-header></v-header>
     <!-- <router-link to="/"></router-link> -->
     <router-view></router-view>
@@ -44,6 +44,9 @@ export default {
   methods: {
     getLocation() {
       this.$refs.map.getLocation()
+    },
+    touchmove() {
+
     }
   }
 }
