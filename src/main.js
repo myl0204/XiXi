@@ -26,10 +26,11 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     curCity: '获取城市中',
-    address: '正在获取你的地点',
-    customAddress: {
-      name: '',
-      latLng: {}
+    // address: '正在获取你的地点',
+    address: {
+      name: '正在获取你的地点',
+      latLng: {},
+      from: 0
     },
     nearPois: [],
     listShowFlag: false,
@@ -46,12 +47,12 @@ const store = new Vuex.Store({
     changeCity(state, newCity) {
       state.curCity = newCity
     },
-    changeAddress(state, newAddr) {
-      state.address = newAddr
+    changeAddress(state, payload) {
+      state.address = payload
     },
-    changeCustomAddress(state, newAddr) {
-      state.customAddress = newAddr
-    },
+    // changeCustomAddress(state, payload) {
+    //   state.customAddress = payload
+    // },
     changePois(state, newPois) {
       state.nearPois = newPois
     },
