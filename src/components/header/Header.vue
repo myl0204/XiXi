@@ -1,32 +1,39 @@
 <template>
-<div class="header-wrapper">
-  <div class="header">
-    <div class="user" @click="userClick">
-      <Icon name="user" scale="1.5"></Icon>
+  <div class="header-wrapper">
+    <div class="header">
+      <div class="user" @click="userClick">
+        <Icon name="user" scale="1.5"></Icon>
+      </div>
+      <!-- <User ref="user"></User> -->
+      <div class="city" @click="showCityList"><span class="text">{{curCity}}</span><span class="icon"><Icon name="angle-down"></Icon></span></div>
+      <div class="message">
+        <Icon name="reorder" scale="1.5"></Icon>
+      </div>
     </div>
-    <!-- <User ref="user"></User> -->
-    <div class="city" @click="showCityList"><span class="text">{{curCity}}</span><span class="icon"><Icon name="angle-down"></Icon></span></div>
-    <div class="message">
-      <Icon name="reorder" scale="1.5"></Icon>
+    <div class="tab" ref="catType">
+      <ul>
+        <router-link 
+          ref="links"
+          v-for="(link, index) in routerLink" 
+          :to="link.to" 
+          class="type" 
+          :key="index"
+          @click.native="tabClick(index)">
+            {{link.text}}
+        </router-link>
+        <!-- <router-link :to="{name: 'content', params: {catType: 'fast'}}" class="type">快猫</router-link>
+        <router-link :to="{name: 'content', params: {catType: 'rent'}}" class="type">出租猫</router-link>
+        <router-link :to="{name: 'content', params: {catType: 'special'}}" class="type">专猫</router-link>
+        <router-link :to="{name: 'sharing'}" class="type">顺风猫</router-link>
+        <router-link :to="{name: 'content', params: {catType: 'substitute'}}" class="type">代撸</router-link>
+        <router-link :to="{name: 'content', params: {catType: 'second-hand'}}" class="type">二手猫</router-link>
+        <router-link :to="{name: 'content', params: {catType: 'cloud'}}" class="type">云撸猫</router-link> -->
+      </ul>
+      <div class="all-type">
+        <icon name="th-large"></icon>
+      </div>
     </div>
   </div>
-  <div class="tab" ref="catType">
-    <ul>
-      <router-link :to="{name: 'content', params: {catType: 'fast'}}" class="type">快猫</router-link>
-      <router-link :to="{name: 'content', params: {catType: 'rent'}}" class="type">出租猫</router-link>
-      <router-link :to="{name: 'content', params: {catType: 'special'}}" class="type">专猫</router-link>
-      <router-link :to="{name: 'content', params: {catType: 'sharing'}}" class="type">顺风猫</router-link>
-      <router-link :to="{name: 'content', params: {catType: 'substitute'}}" class="type">代撸</router-link>
-      <router-link :to="{name: 'content', params: {catType: 'second-hand'}}" class="type">二手猫</router-link>
-      <router-link :to="{name: 'content', params: {catType: 'cloud'}}" class="type">云撸猫</router-link>
-    </ul>
-    <div class="all-type">
-      <icon name="th-large"></icon>
-    </div>
-  </div>
-  <!-- <City :allCity="allCity" ref="cityList"></City> -->
-</div>
-  
 </template>
 
 <script>
@@ -61,6 +68,40 @@ export default {
     //     }
     //   })
   },
+  data() {
+    return {
+      routerLink: [
+        {
+          to: {name: 'content', params: {catType: 'fast'}},
+          text: '快猫'
+        },
+        {
+          to: {name: 'content', params: {catType: 'rent'}},
+          text: '出租猫'
+        },
+        {
+          to: {name: 'content', params: {catType: 'special'}},
+          text: '专猫'
+        },
+        {
+          to: {name: 'sharing'},
+          text: '顺风猫'
+        },
+        {
+          to: {name: 'content', params: {catType: 'substitute'}},
+          text: '代撸'
+        },
+        {
+          to: {name: 'content', params: {catType: 'second-hand'}},
+          text: '二手猫'
+        },
+        {
+          to: {name: 'content', params: {catType: 'clound'}},
+          text: '云撸猫'
+        }
+      ]
+    }
+  },
   computed: {
     curCity() {
       /* eslint-disable no-undef */
@@ -68,6 +109,10 @@ export default {
     }
   },
   methods: {
+    tabClick(index) {
+      let target = this.$refs.links[index].$el
+      this.Scroll.scrollToElement(target, 0, true)
+    },
     userClick() {
       const cookie = util.getCookie()
       if (cookie.isLogged === 'true') {
@@ -129,23 +174,27 @@ export default {
     .tab {
       position: relative;
       width: 100%;
+      // line-height: 19px;
       // margin-bottom: 10px;
       overflow: hidden;
       white-space:nowrap;
       // z-index: 5;
       ul {
         width: 425px;
+        height: 16px;
         font-size:0;
         .type {
           display: inline-block;
+          padding: 0 12px;
           font-size: 14px;
           font-weight: 200;
+          line-height: 16px;
           color: #000;
           &.router-active {
             color: $theme-color
           }
-          &:not(:last-child) {
-            margin-right: 25px;
+          &:first-child {
+            padding-left: 0
           }
         }
       }
