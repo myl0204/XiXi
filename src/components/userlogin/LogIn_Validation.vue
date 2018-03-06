@@ -35,7 +35,7 @@
 import Modal from '@@/modal/Modal'
 import Message from '@@/message/Message'
 import apiMixin from '../../common/js/api.js'
-import util from '@/common/js/util.js'
+import { storage } from '@/common/js/util.js'
 const INIT_STEP = 0
 const PREV_STEP = 1
 const CURRENT_STEP = 3
@@ -159,9 +159,9 @@ export default {
         if (this.validationCode === '6666') {
           // 设置已登陆cookie，设置localstorage
           const maxAge = 60 * 60 * 24 * 7
-          util.setCookie('isLogged', true, maxAge)
-          util.setCookie('uid', this.currentUser, maxAge)
-          util.setLocalStorage(this.currentUser, 'logTime', new Date())
+          storage.setCookie('isLogged', true, maxAge)
+          storage.setCookie('uid', this.currentUser, maxAge)
+          storage.setLocalStorage(this.currentUser, 'logTime', new Date())
           setTimeout(() => {
             this.goNextStep()
           }, 700)

@@ -16,7 +16,7 @@ import Header from '@@/header/Header'
 import LogIn from '@@/userlogin/LogIn'
 import User from '@@/user/User'
 import List from '@@/list/List'
-import util from '@/common/js/util.js'
+import { storage } from '@/common/js/util.js'
 import router from '@/router/index.js'
 router.push({name: 'content', params: {catType: 'fast'}})
 export default {
@@ -31,7 +31,7 @@ export default {
     LogIn
   },
   created() {
-    const cookie = util.getCookie()
+    const cookie = storage.getCookie()
     let user = cookie.uid
     if (user) {
       this.$store.commit('changeUser', user)

@@ -20,7 +20,7 @@
 <script>
 import Modal from '@@/modal/Modal'
 import apiMixin from '../../common/js/api.js'
-import util from '@/common/js/util.js'
+import { storage } from '@/common/js/util.js'
 /* eslint-disable no-unused-vars */
 const INIT_STEP = 0
 const CURRENT_STEP = 1
@@ -72,7 +72,7 @@ export default {
       }
       this.loadingShowFlag = true
       // 若是第一次登录，采用验证码登录。
-      const hadLogged = util.hadLogged(this.input)
+      const hadLogged = storage.hadLogged(this.input)
       if (!hadLogged) {
         this.NEXT_STEP = VALIDATION_CODE_STEP
       }

@@ -1,4 +1,4 @@
-const util = {
+export const storage = {
    // 存储localStorage
   setLocalStorage(id, key, value) {
     let xixi = window.localStorage.getItem('__xixi__')
@@ -79,5 +79,38 @@ const util = {
     document.cookie = `${name}=; path=/XiXi; max-age=0`
   }
 }
-
-export default util
+/**
+ * 令目标节点的高度填充满页面的剩余部分
+ * @param {Object} obj 唯一参数，内有属性包括：目标节点target
+ *                     已存在的所有元素的高之和totalHeight
+ */
+export function fillTheScreen(obj) {
+  let height = window.innerHeight
+  if (!obj.target || !obj.totalHeight) return
+  height = 1 - obj.totalHeight / height
+  obj.target.style.height = height * 100 + 'vh'
+}
+/**
+ * 简单的移动函数
+ * @param {HTML Object} el 目标节点
+ * @param {number} x 水平方向的移动
+ * @param {number} y 垂直方向的移动
+ */
+export function translate(el, x, y, options) {
+  const defaultOptions = {
+    useTransfrom: true,
+    transitionTimingFunction: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
+    transitionDuration: '0s'
+  }
+  for (let option in options) {
+    defaultOptions[option] = options[option]
+  }
+  if (defaultOptions.useTransfrom) {
+    el.style.transform = `translate3d(${x}px,${y}px,0)`
+    el.style.transitionTimingFunction = defaultOptions.transitionTimingFunction
+    el.style.transitionDuration = defaultOptions.transitionDuration
+  } else {
+    el.style.left = x
+    el.style.top = y
+  }
+}
