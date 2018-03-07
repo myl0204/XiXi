@@ -1,7 +1,7 @@
 <template>
   <div id="map-container" ref="map">
     <!-- <button class="btn" @click="getLocation">点我定位</button> -->
-    <map-marker ref="marker" :showFlag="timeInfoShowFlag"></map-marker>
+    <map-marker ref="marker" :timeInfoShowFlag="timeInfoShowFlag"></map-marker>
     <message 
       :message="'定位失败，请刷新重试'" 
       :iconName="'exclamation-circle'" 
@@ -15,6 +15,7 @@
 import Icon from 'vue-awesome/components/Icon'
 import MapMarker from '@@/mapMarker/Marker'
 import Message from '@@/message/Message'
+import {fillTheScreen} from '@/common/js/util.js'
 export default {
   data() {
     return {
@@ -44,11 +45,20 @@ export default {
     }
   },
   methods: {
+    // 切换猫种时，刷新“等候时间”，提升交互
+    refreshTimeInfo() {
+      this.timeInfoShowFlag = false
+      setTimeout(() => {
+        this.timeInfoShowFlag = true
+      }, 200)
+      this.$refs.marker.calculateTime()
+    },
     // 初始化腾讯地图
     _initMap() {
       // 自适应高度
-      let height = (window.innerHeight - 86) / window.innerHeight
-      this.$refs.map.style.height = height * 100 + 'vh'
+      const totalHeight = 86
+      const target = this.$refs.map
+      fillTheScreen({target, totalHeight})
       /* eslint-disable no-undef */
       // h5地图组件，前端定位。
       this.geolocation = new qq.maps.Geolocation()
