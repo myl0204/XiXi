@@ -107,6 +107,7 @@ export function translate(el, x, y, options) {
   }
   if (defaultOptions.useTransfrom) {
     el.style.transform = `translate3d(${x}px,${y}px,0)`
+    el.style.transitionProperty = 'transform'
     el.style.transitionTimingFunction = defaultOptions.transitionTimingFunction
     el.style.transitionDuration = defaultOptions.transitionDuration
   } else {
