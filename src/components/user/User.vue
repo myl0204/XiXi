@@ -43,7 +43,7 @@
         ref="otherContent"
         @touchstart="onOtherContentTouchStart" 
         @touchend="onOtherContentTouchEnd"
-        @touchmove="moveUpOtherContent">
+        @touchmove="moveOtherContent">
         <span class="icon" @click="toggleContent">
           <Icon name="angle-up" :class="{'fa-flip-vertical': !atBottom}" class="icon-self"></Icon>
         </span>
@@ -177,13 +177,17 @@
 
 <script>
 import Icon from 'vue-awesome/components/Icon'
-import util from '@/common/js/util.js'
+import {
+  storage,
+  translate
+} from '@/common/js/util.js'
 // const STEP_LOGOUT = -1
 export default {
   data() {
     return {
       touch: {},
-      currentDiff: 0,
+      totalDiff: 0,
+      currentDistance: 0,
       deviceHeight: 0,
       atBottom: false,
       transitionName: 'slide'
@@ -209,37 +213,23 @@ export default {
       this.atBottom ? '' : this.contentMoveToBottom()
     },
     logOut() {
-      util.delCookie('isLogged')
+      storage.delCookie('isLogged')
       this.$store.commit('changeLogInStepTo', 1)
       this.transitionName = ''
       this.$store.commit('hideUser')
     },
     contentMoveToTop() {
-      this.currentDiff = -this.maxMoveDistance
+      this.currentDistance = this.totalDiff = -this.maxMoveDistance
       this.$refs.otherContent.style.transition = `transform .2s linear`
-      this.$refs.otherContent.style.transform = `translateY(${-this.maxMoveDistance}px)`
-      this.$refs.avatar.style.transition = `transform .2s linear`
-      this.$refs.avatar.style.transform = `scale(.5)`
-      this.$refs.info.style.opacity = 0
-      this.$refs.info.style.transform = `scale(.5)`
-      this.$refs.info.style.transition = `transform .2s linear`
-      this.$refs.optionsMask.style.background = `rgba(255, 255, 255, .5)`
-      this.$refs.optionsMask.style.transition = `background .2s linear`
+      this.$refs.otherContent.style.transform = `translate3d(0px,${-this.maxMoveDistance}px,0px)`
       setTimeout(() => {
         this.atBottom = false
       }, 200)
     },
     contentMoveToBottom() {
-      this.currentDiff = 0
+      this.currentDistance = this.totalDiff = 0
       this.$refs.otherContent.style.transition = `transform .2s linear`
-      this.$refs.otherContent.style.transform = `translateY(0px)`
-      this.$refs.avatar.style.transition = `transform .2s linear`
-      this.$refs.avatar.style.transform = `scale(1)`
-      this.$refs.info.style.opacity = 1
-      this.$refs.info.style.transform = `scale(1)`
-      this.$refs.info.style.transition = `transform .2s linear`
-      this.$refs.optionsMask.style.background = `rgba(255, 255, 255, 0)`
-      this.$refs.optionsMask.style.transition = `background .2s linear`
+      this.$refs.otherContent.style.transform = `translate3d(0px, 0px, 0px)`
       setTimeout(() => {
         this.atBottom = true
       }, 200)
@@ -247,7 +237,6 @@ export default {
     onOtherContentTouchStart(ev) {
       let touch = ev.changedTouches[0]
       this.touch.y1 = touch.pageY
-      this.$refs.otherContent.style.transition = ''
     },
     onOtherContentTouchEnd(ev) {
       let touch = ev.changedTouches[0]
@@ -255,41 +244,26 @@ export default {
       // 当次滑动的距离
       let newDiff = this.touch.y2 - this.touch.y1
       // 总滑动距离
-      let totalDiff = newDiff + this.currentDiff
-      this.currentDiff = totalDiff
-      if (this.currentDiff > 0) {
-        this.currentDiff = 0
-      }
+      this.totalDiff = newDiff + this.currentDistance
       // 超过一定距离松手则展示，否则隐藏。
-      if (-totalDiff >= this.deviceHeight / 3) {
+      if (-this.totalDiff >= this.deviceHeight / 3) {
         this.contentMoveToTop()
       } else {
         this.contentMoveToBottom()
       }
     },
-    moveUpOtherContent(ev) {
+    moveOtherContent(ev) {
       let touch = ev.changedTouches[0]
       this.touch.y2 = touch.pageY
       let newDiff = this.touch.y2 - this.touch.y1
-      let totalDiff = newDiff + this.currentDiff
-      if (-totalDiff > this.maxMoveDistance) {
-        totalDiff = -this.maxMoveDistance
-      } else if (totalDiff > 0) {
-        totalDiff = 0
+      this.totalDiff = newDiff + this.currentDistance
+      if (-this.totalDiff > this.maxMoveDistance) {
+        this.totalDiff = -this.maxMoveDistance
+      } else if (this.totalDiff > 0) {
+        this.totalDiff = 0
       }
-      // 头像缩放倍数
-      let ratio = 1 + totalDiff / (2 * this.maxMoveDistance)
-      // 文字透明度
-      let opacity = 1 + 2 * totalDiff / this.maxMoveDistance
-      // 遮罩透明度
-      let maskOpacity = -totalDiff / this.maxMoveDistance
-      // 滑动其他内容
-      this.$refs.otherContent.style.transform = `translateY(${totalDiff}px)`
-      // 缩放头像以及隐藏文字
-      this.$refs.avatar.style.transform = `scale(${ratio})`
-      this.$refs.info.style.opacity = opacity
-      this.$refs.info.style.transform = `scale(${ratio})`
-      this.$refs.optionsMask.style.background = `rgba(255, 255, 255, ${maskOpacity})`
+      let el = this.$refs.otherContent
+      translate(el, 0, this.totalDiff)
     },
     showResume() {
       window.open('https://github.com/myl0204')
@@ -299,10 +273,24 @@ export default {
     }
   },
   watch: {
+    // 注销用户后，user界面能直接消失
     transitionName() {
       setTimeout(() => {
         this.transitionName = 'slide'
       }, 20)
+    },
+    totalDiff() {
+      // 头像缩放倍数
+      let ratio = 1 + this.totalDiff / (2 * this.maxMoveDistance)
+      // 文字透明度
+      let opacity = 1 + 2 * this.totalDiff / this.maxMoveDistance
+      // 遮罩透明度
+      let maskOpacity = -this.totalDiff / this.maxMoveDistance
+
+      this.$refs.avatar.style.transform = `scale(${ratio})`
+      this.$refs.info.style.opacity = opacity
+      this.$refs.info.style.transform = `scale(${ratio})`
+      this.$refs.optionsMask.style.background = `rgba(255, 255, 255, ${maskOpacity})`
     }
   },
   components: {
