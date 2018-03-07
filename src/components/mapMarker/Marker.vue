@@ -2,15 +2,17 @@
   <div class="marker-wrapper">
     <div class="marker">
       <img src="./symbol1.png" alt="" width="20">
-      <div class="time-info-wrapper" v-show="showFlag">
-        <div class="time-info">
-          <div class="content" v-if="!isLoading">
-            <span class="time">{{waitingTime}}分钟后</span><span class="text">开撸</span>
+      <transition>
+        <div class="time-info-wrapper" v-show="timeInfoShowFlag" ref="timeInfo">
+          <div class="time-info">
+            <div class="content" v-if="!isLoading">
+              <span class="time">{{waitingTime}}分钟后</span><span class="text">开撸</span>
+            </div>
+            <loading :loadingShowFlag="isLoading" v-else></loading>
           </div>
-          <loading :loadingShowFlag="isLoading" v-else></loading>
+          <span class="arrow"></span>
         </div>
-        <span class="arrow"></span>
-      </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -19,9 +21,9 @@
 import Loading from '@@/loading/Loading'
 export default {
   props: {
-    showFlag: {
+    timeInfoShowFlag: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   data() {
@@ -61,6 +63,12 @@ $infoWidth: 67.05px;
       // width: $infoWidth;
       left: 50%;
       transform: translateX(-50%);
+      &.v-enter {
+        opacity: 0;
+      }
+      &.v-enter-active {
+        transition: opacity linear .2s
+      }
       .time-info {
         display: inline-block;
         padding: 10px 12px;
