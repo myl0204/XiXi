@@ -40,7 +40,7 @@
 import Icon from 'vue-awesome/components/Icon'
 import BScroll from 'better-scroll'
 import City from '@@/city/City'
-import util from '@/common/js/util.js'
+import { storage } from '@/common/js/util.js'
 const CITY_LIST = 0
 const DEFALUT_LISTSUBTYPE = 0
 const FIRST_STEP = 1
@@ -114,7 +114,7 @@ export default {
       this.Scroll.scrollToElement(target, 0, true)
     },
     userClick() {
-      const cookie = util.getCookie()
+      const cookie = storage.getCookie()
       if (cookie.isLogged === 'true') {
         this.showUser()
       } else {
