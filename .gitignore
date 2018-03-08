@@ -13,3 +13,4 @@ debug.log
 *.njsproj
 *.sln
 src/components/loading/Loading.vue
+*.vscode/
