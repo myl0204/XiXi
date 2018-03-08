@@ -30,7 +30,7 @@ export default {
   },
   mounted() {
     this.maxMoveDistance = window.innerWidth
-    this.leftEl = this.$refs.owner.parentElement.querySelector('.left-hidden')
+    this.leftEl = this.$refs.owner.parentElement.querySelector('.out_of_screen-left')
   },
   data() {
     return {
@@ -84,12 +84,11 @@ export default {
           transitionTimingFunction: 'linear',
           transitionDuration: '.1s'
         })
-        this.$emit('dragedSlide')
+        this.$emit('dragedSlide') // 通知父组件进行路由切换
       } else {
         this.totalDiff = this.currentDistance = 0
-        // el.clientWidth
         translate(el, this.totalDiff, 0)
-        translate(this.leftEl, -this.maxMoveDistance, 0, {
+        translate(this.leftEl, this.totalDiff, 0, {
           transitionTimingFunction: 'linear',
           transitionDuration: '.1s'
         })

@@ -21,7 +21,7 @@ export default {
   },
   mounted() {
     this.maxMoveDistance = window.innerWidth
-    this.rightEl = this.$refs.customer.parentElement.querySelector('.right-hidden')
+    this.rightEl = this.$refs.customer.parentElement.querySelector('.out_of_screen-right')
   },
   data() {
     return {

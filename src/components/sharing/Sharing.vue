@@ -22,14 +22,13 @@
       </div>
     </div>
     <div class="sharing-content-wrapper">
-      <passenger class="sharing-content left-hidden" @transitionend.native="updateRouter($event, 'passenger')"/>
+      <passenger class="out_of_screen out_of_screen-left" @transitionend.native="updateRouter($event, 'passenger')"/>
         <router-view 
           class="sharing-content" 
           :transitionName="transitionName"
           @dragedSlide="confirmDragSlide"
-        >
-        </router-view>
-      <driver class="sharing-content right-hidden" @transitionend.native="updateRouter($event, 'driver')"/>
+        />
+      <driver class="out_of_screen out_of_screen-right" @transitionend.native="updateRouter($event, 'driver')"/>
     </div>
   </div>
 </template>
@@ -47,10 +46,9 @@ export default {
     fillTheScreen({target, totalHeight})
   },
   updated() {
-    // console.log('updated')
-    // this.transitionName = 'slide'
     this.toggleType()
   },
+  // 通过更改transitionName来改变动画
   beforeRouteUpdate(to, from, next) {
     this.transitionName = this.isDragedSlide ? '' : 'slide'
     next()
@@ -72,9 +70,8 @@ export default {
         underline.style.transform = `translateX(57px)`
       }
     },
-    // 通过更改transitionName来改变动画
+    // 是否通过手指拖动触发滑屏
     confirmDragSlide() {
-      // console.log('chufale')
       this.isDragedSlide = true
     },
     updateRouter(ev, routeName) {
@@ -179,15 +176,17 @@ export default {
       position: absolute;
       height: 100%;
       width: 100%;
-      &.left-hidden {
-        position: absolute;
-        top: 0;
+    }
+    .out_of_screen {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      &.out_of_screen-left {
         left: -100%;
       }
-      &.right-hidden {
-        position: absolute;
-        top: 0;
-        right: -100%
+      &.out_of_screen-right {
+        right: -100%;
       }
     }
   }
