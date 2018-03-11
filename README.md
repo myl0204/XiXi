@@ -8,7 +8,7 @@ Tips: 使用chrome开发者模式，切换为手机视图，切换后还请**刷
 ![gif](https://raw.githubusercontent.com/myl0204/XiXi/master/img/Animation.gif)
 ![gif](https://raw.githubusercontent.com/myl0204/XiXi/master/img/Animation2.gif)
 ## todo
-~~改用高德地图~~
+:heavy_check_mark:改用高德地图
 
 能复原滴滴app多少是多少:muscle:
 ## Build Setup
