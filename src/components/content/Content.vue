@@ -13,8 +13,8 @@ import MapInput from '@@/mapinput/MapInput'
 export default {
   beforeRouteEnter(to, from, next) {
     // 在进入content组件之前，“获取”等候时间
-    next((content) => {
-      content.$refs.map.$refs.marker.calculateTime()
+    next((context) => {
+      context.$refs.map.$refs.marker.calculateTime()
     })
   },
   beforeRouteUpdate(to, from, next) {

@@ -1,6 +1,6 @@
 <template>
   <div class="city-list">
-    <div class="cur-city">当前城市:{{curCity}}</div>
+    <div class="cur-city">当前城市:{{ipCity}}</div>
     <h2 class="city-flag-fixed" ref="fixedFlag">{{fixedFlag}}</h2>
     <div class="other-city" ref="listWrapper">
       <ul>
@@ -55,8 +55,8 @@ export default {
     }
   },
   computed: {
-    curCity() {
-      return this.$store.state.curCity
+    ipCity() {
+      return this.$store.state.ipCity
     },
     listShowFlag() {
       return this.$store.state.listShowFlag

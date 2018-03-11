@@ -25,14 +25,18 @@ Vue.use(Vuex)
 /* eslint-disable new-cap */
 const store = new Vuex.Store({
   state: {
+    ipCity: '暂无城市信息',
     curCity: '获取城市中',
     // address: '正在获取你的地点',
     address: {
       name: '正在获取你的地点',
-      latLng: {},
-      from: 0
+      lngLat: {}
     },
     nearPois: [],
+    searchPois: [],
+    suggestedPois: [],
+    isSearchingInfoVisible: false,
+    isSearchingErrorInfoVisible: false,
     listShowFlag: false,
     pHolder: '',
     listType: 1,
@@ -44,6 +48,9 @@ const store = new Vuex.Store({
     logInStep: 0
   },
   mutations: {
+    setIpCity(state, city) {
+      state.ipCity = city
+    },
     changeCity(state, newCity) {
       state.curCity = newCity
     },
@@ -53,8 +60,26 @@ const store = new Vuex.Store({
     // changeCustomAddress(state, payload) {
     //   state.customAddress = payload
     // },
-    changePois(state, newPois) {
+    changeNearPois(state, newPois) {
       state.nearPois = newPois
+    },
+    changeSearchPois(state, newPois) {
+      state.searchPois = newPois
+    },
+    changeSuggestedPois(state, newPois) {
+      state.suggestedPois = newPois
+    },
+    showSearchingInfo(state) {
+      state.isSearchingInfoVisible = true
+    },
+    hideSearchingInfo(state) {
+      state.isSearchingInfoVisible = false
+    },
+    showSearchingErrorInfo(state) {
+      state.isSearchingErrorInfoVisible = true
+    },
+    hideSearchingErrorInfo(state) {
+      state.isSearchingErrorInfoVisible = false
     },
     showList(state) {
       state.listShowFlag = true

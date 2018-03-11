@@ -3,7 +3,7 @@
     <div class="marker">
       <img src="./symbol1.png" alt="" width="20">
       <transition>
-        <div class="time-info-wrapper" v-show="timeInfoShowFlag" ref="timeInfo">
+        <div class="time-info-wrapper" v-show="isTimeInfoVisible" ref="timeInfo">
           <div class="time-info">
             <div class="content" v-if="!isLoading">
               <span class="time">{{waitingTime}}分钟后</span><span class="text">开撸</span>
@@ -21,7 +21,7 @@
 import Loading from '@@/loading/Loading'
 export default {
   props: {
-    timeInfoShowFlag: {
+    isTimeInfoVisible: {
       type: Boolean,
       default: false
     }

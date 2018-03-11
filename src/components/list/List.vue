@@ -1,5 +1,5 @@
 <template>
-  <transition name="slide-fade" @after-enter="afterEnter">
+  <transition name="slide-fade">
     <div class="list-wrapper" v-show="listShowFlag">
       <list-input
         @onListHide="hideList"
@@ -29,7 +29,7 @@ const CITY_LIST = 0
 const LOCATION_LIST = 1
 const MIXINPUT_LIST = 2
 const DEFALUT_LISTSUBTYPE = 0
-const LOCATION_TO_LISTSUBTYPE = 2
+// const LOCATION_TO_LISTSUBTYPE = 2
 export default {
   data() {
     return {
@@ -37,7 +37,8 @@ export default {
     }
   },
   created() {
-    this.$http.get('/api/citylist')
+    // this.$http.get('api/city.json')
+    this.$http.get('/api/cityList')
       .then((res) => {
         if (res.status >= 200 && res.status < 300 || res.status === 304) {
           if (res.data.errno === SUC_CODE) {
@@ -101,20 +102,20 @@ export default {
         listType: LOCATION_LIST,
         listSubType: this.currentListSubType
       })
-    },
-    afterEnter() {
-      this.$refs.listContent.scroll.refresh()
-      // 当前列表子类型
-      this.currentListSubType = this.listSubType
-      // 每次打开类型为“到哪去”的LocationList，都执行一次初始化搜索
-      // 在List组件或者LocationList组件中监听curCity的变化无法使LocationList组件执行相关动作
-      // 因为改变city时，LocationList组件并没有被引用。
-      if (this.listSubType === LOCATION_TO_LISTSUBTYPE) {
-        this.$refs.listContent.infoShowFlag = true
-        this.$refs.listContent.searchService.setLocation(this.curCity)
-        this.$refs.listContent.initSuggestedPois()
-      }
     }
+    // afterEnter() {
+    //   this.$refs.listContent.scroll.refresh()
+    //   // 当前列表子类型
+    //   this.currentListSubType = this.listSubType
+    //   // 每次打开类型为“到哪去”的LocationList，都执行一次初始化搜索
+    //   // 在List组件或者LocationList组件中监听curCity的变化无法使LocationList组件执行相关动作
+    //   // 因为改变city时，LocationList组件并没有被引用。
+    //   if (this.listSubType === LOCATION_TO_LISTSUBTYPE) {
+    //     this.$refs.listContent.infoShowFlag = true
+    //     this.$refs.listContent.searchService.setLocation(this.curCity)
+    //     this.$refs.listContent.initSuggestedPois()
+    //   }
+    // }
   },
   components: {
     Icon,

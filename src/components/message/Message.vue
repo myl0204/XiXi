@@ -40,10 +40,11 @@ export default {
       showFlag: true
     }
   },
-  created() {
+  updated() {
+    const delay = this.delay
     setTimeout(() => {
       this.showFlag = false
-    }, this.delay)
+    }, delay)
   },
   components: {
     Icon,

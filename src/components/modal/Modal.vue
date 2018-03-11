@@ -91,9 +91,6 @@ export default {
       isActive: false
     }
   },
-  created() {
-    console.log(this.hasMask, this.confirmText)
-  },
   methods: {
     // hide() {
     //   this.$emit('hide')

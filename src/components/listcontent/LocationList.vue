@@ -6,7 +6,7 @@
         v-for="(poi, index) in nearPois" 
         :key="poi.id" 
         ref="list" 
-        @click="changeCurrentLocation($event, index)"
+        @click="changeCurrentLocation(index)"
         @touchstart="highlightPoi($event)"
         @touchend="normalizePoi($event)"
       >
@@ -19,7 +19,7 @@
         v-for="(poi, index) in suggestedPois" 
         :key="poi.id" 
         ref="list"
-        @click="changeDestination($event, index)"
+        @click="changeDestination(index)"
         @touchstart="highlightPoi($event)"
         @touchend="normalizePoi($event)"
       >
@@ -27,19 +27,21 @@
       </li>
     </ul>
     <ul v-else>
+      <!-- 用户有输入时 -->
       <li 
         class="location-item"
-        v-for="(poi, index) in pois" 
+        v-for="(poi, index) in searchPois" 
         :key="poi.id" 
         ref="list" 
-        @click="changeLocation($event, index)"
+        @click="changeLocation(index)"
         @touchstart="highlightPoi($event)"
         @touchend="normalizePoi($event)"
       >
         {{poi.name}}
       </li>
     </ul>
-    <div class="info" v-show="infoShowFlag">
+    <div class="info-error" v-show="isSearchingErrorInfoVisible"><p class="text">暂无结果，换个词试试吧！</p></div>
+    <div class="info" v-show="isSearchingInfoVisible">
       <div class="row">
         <span class="icon">
           <Icon name="circle-o-notch" spin></Icon>
@@ -53,24 +55,13 @@
 <script>
 import Icon from 'vue-awesome/components/Icon'
 import BScroll from 'better-scroll'
-import debounce from 'lodash.debounce'
+// import debounce from 'lodash.debounce'
 export default {
   mounted() {
     this.scroll = new BScroll(this.$refs.listWrapper, {
       click: true,
       bonce: false
     })
-    /* eslint-disable no-undef */
-    this.initSearchService()
-    this.initSuggestedPois()
-  },
-  data() {
-    return {
-      infoShowFlag: false,
-      pois: [],
-      suggestedPois: [], // 当前address建议的pois,终点
-      searchCount: 0
-    }
   },
   computed: {
     curCity() {
@@ -86,9 +77,21 @@ export default {
     nearPois() {
       return this.$store.state.nearPois
     },
+    searchPois() {
+      return this.$store.state.searchPois
+    },
+    suggestedPois() {
+      return this.$store.state.suggestedPois
+    },
     // 有效输入，过滤例如'   '这种输入
     validInput() {
       return this.input.replace(/\s/g, '')
+    },
+    isSearchingInfoVisible() {
+      return this.$store.state.isSearchingInfoVisible
+    },
+    isSearchingErrorInfoVisible() {
+      return this.$store.state.isSearchingErrorInfoVisible
     }
   },
   methods: {
@@ -98,73 +101,26 @@ export default {
     normalizePoi(ev) {
       ev.target.classList.remove('active')
     },
-    search: debounce(function(val) {
-      this.searchService.search(val)
-    }, 300),
-    searchCompleted(result) {
-      if (this.searchCount === 0) {
-        this.suggestedPois = result.detail.pois
-      }
-      console.log(result)
-      this.searchCount++
-      this.pois = result.detail.pois
-      this.infoShowFlag = false
-      this.$nextTick(() => {
-        this.scroll.refresh()
-      })
-    },
-    initSearchService() {
-      this.searchService = new qq.maps.SearchService({
-        complete: this.searchCompleted,
-        autoExtend: false,
-        location: this.curCity,
-        pageCapacity: 20
-      })
-    },
-    initSuggestedPois() {
-      this.searchCount = 0
-      this.searchService.search(this.curCity)
-    },
-    changeCurrentLocation(ev, index, pois) {
-      if (!pois) {
-        pois = this.nearPois
-      }
-      let poi = pois[index]
-      let address = {
-        name: poi.name,
-        latLng: poi.latLng,
-        from: 0
+    changeCurrentLocation(index) {
+      const lngLat = this.nearPois[index].location
+      const address = {
+        name: this.nearPois[index].name,
+        lngLat,
+        ifMove: true
       }
       this.$store.commit('changeAddress', address)
       this.$store.commit('locationInputChanged', '')
       this.$store.commit('hideList')
     },
-    changeDestination(ev, index) {
+    changeDestination(index) {
       this.$store.commit('hideList')
     },
-    changeLocation(ev, index) {
+    changeLocation(index) {
       if (this.listSubType === 1) {
-        this.changeCurrentLocation(ev, index, this.pois)
+        this.changeCurrentLocation(index, this.searchPois)
       } else {
-        this.changeDestination(ev, index)
+        this.changeDestination(index)
       }
-    }
-  },
-  watch: {
-    input(newVal) {
-      this.infoShowFlag = true
-      // 去除空格部分
-      newVal = newVal.replace(/\s/g, '')
-      if (newVal === '') {
-        setTimeout(() => {
-          this.infoShowFlag = false
-        }, 300)
-      } else {
-        this.search(newVal)
-      }
-    },
-    curCity(newCity) {
-      this.searchService.setLocation(newCity)
     }
   },
   components: {
@@ -189,9 +145,27 @@ export default {
     padding: 0 20px;
     height: 60px;
     line-height: 60px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
     @include border-1px-bottom;
     &.active {
       background-color: rgba(230, 230, 230, 0.5);
+    }
+  }
+  .info-error {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    background-color: #fff;
+    z-index: 21;
+    .text {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      transform: translateY(-50%)
     }
   }
   .info {
