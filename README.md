@@ -4,13 +4,11 @@
 Tips: 使用chrome开发者模式，切换为手机视图，切换后还请**刷新**一次^ ^
 
 登录验证码为6666，密码则为任意长度大于等于6的字符。
-## 对于新版chrome(chrome63+)会出现无法定位的情况。原因是google拦截了腾讯地图的相关请求。
-    计划改用高德
 ## 部分截图
 ![gif](https://raw.githubusercontent.com/myl0204/XiXi/master/img/Animation.gif)
 ![gif](https://raw.githubusercontent.com/myl0204/XiXi/master/img/Animation2.gif)
 ## todo
-改用高德地图
+~~改用高德地图~~
 
 能复原滴滴app多少是多少:muscle:
 ## Build Setup
