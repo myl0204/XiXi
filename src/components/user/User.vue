@@ -266,7 +266,7 @@ export default {
       translate(el, 0, this.totalDiff)
     },
     showResume() {
-      window.open('https://github.com/myl0204')
+      window.open('https://github.com/myl0204/resume')
     },
     maskClick() {
       this.$store.commit('hideUser')
