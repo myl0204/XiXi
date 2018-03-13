@@ -47,11 +47,15 @@ export default {
     this.scroll.on('refresh', () => {
       this._calculateHeight()
     })
+    this.$nextTick(() => {
+      this._calculateHeight()
+    })
   },
   data() {
     return {
       scrollY: -1,
-      fixedFlag: '★热门城市'
+      fixedFlag: '★热门城市',
+      listHeight: []
     }
   },
   computed: {
