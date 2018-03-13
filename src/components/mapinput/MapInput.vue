@@ -1,7 +1,8 @@
 <template>
   <div class="input-wrapper">
     <span class="btn" @click="clickGeoBtn">
-      <Icon name="location-arrow"></Icon>
+      <Icon name="spinner" spin v-if="isGeo"></Icon>
+      <Icon name="location-arrow" v-else></Icon>
     </span>
     <div class="time-type" ref="time-type">
       <span class="text" @click="changeTimeType(0)">现在</span>
@@ -45,6 +46,7 @@ export default {
       nowFlag: true,
       addressFromHighlight: false,
       addresstoHighlight: false,
+      isGeo: false,
       locationListTypeFrom: {
         listSubType: LOCATION_FROM_LISTSUBTYPE,
         pHolder: '从哪开始撸猫'
@@ -62,6 +64,7 @@ export default {
   },
   methods: {
     clickGeoBtn() {
+      this.isGeo = true
       this.$emit('geoBtnClick')
     },
     changeTimeType(type) {
@@ -83,9 +86,7 @@ export default {
     //   this.$store.commit('showList')
     // },
     showLocationList(type) {
-      // console.log(type)
       let {listSubType, pHolder} = type
-      console.log(listSubType, pHolder)
       this.$store.commit('showList')
       this.$store.commit('toggleList', {
         listType: LOCATION_LIST,
@@ -139,6 +140,7 @@ export default {
       // z-index: 1;
       &.active {
         position: absolute;
+        left: 2px;
         height: 30px;
         border-radius: 14px;
         background-color: #fff;
@@ -197,6 +199,9 @@ export default {
       }
       .text {
         flex: 1 1 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
     .address-from {

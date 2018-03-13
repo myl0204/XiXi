@@ -50,11 +50,6 @@ export default {
       /* eslint-disable no-undef */
       // 创建地图
       this.map = new AMap.Map(target, mapOptions)
-      // 获取按钮偏移量
-      const x = window.innerWidth
-      const y = window.innerHeight
-      const offSetX = x / 50
-      const offsetY = y / 50 + 105 + 34 + 5
       // 定位插件
       this.map.plugin('AMap.Geolocation', () => {
         this.geolocation = new AMap.Geolocation({
@@ -62,9 +57,7 @@ export default {
           timeout: 3000,          // 超过10秒后停止定位，默认：无穷大
           maximumAge: 0,           // 定位结果缓存0毫秒，默认：0
           convert: true,           // 自动偏移坐标，偏移后的坐标为高德坐标，默认：true
-          showButton: true,        // 显示定位按钮，默认：true
-          buttonPosition: 'LB',    // 定位按钮停靠位置，默认：'LB'，左下角
-          buttonOffset: new AMap.Pixel(offSetX, offsetY), // 定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+          showButton: false,        // 显示定位按钮，默认：true
           showMarker: true,        // 定位成功后在定位到的位置显示点标记，默认：true
           showCircle: true,        // 定位成功后用圆圈表示定位精度范围，默认：true
           panToLocation: true,    // 定位成功后将定位到的位置作为地图中心点，默认：true
@@ -122,23 +115,27 @@ export default {
       }, delay)
     },
     onGeolocationComplete(GeolocationResult) {
-      this.lngLat = GeolocationResult.position
-      const pois = GeolocationResult.pois.splice(0, 10)
-      const address = {
-        name: pois[0].name,
-        lngLat: this.lngLat
+      if (GeolocationResult.info === 'SUCCESS') {
+        this.lngLat = GeolocationResult.position
+        const pois = GeolocationResult.pois.splice(0, 10)
+        const address = {
+          name: pois[0].name,
+          lngLat: this.lngLat
+        }
+        this.map.setZoom(16)
+        // 设置当前地址
+        this.changeAddress(address)
+        // 设置附近的pois，即起点
+        this.changeNearPois(pois)
+        if (GeolocationResult.location_type === 'ip') {
+          this.showMessage('当前为ip定位，结果可能不准确')
+        }
       }
-      this.map.setZoom(16)
-      // 设置当前地址
-      this.changeAddress(address)
-      // 设置附近的pois，即起点
-      this.changeNearPois(pois)
-      if (GeolocationResult.location_type === 'ip') {
-        this.showMessage('当前为ip定位，结果可能不准确')
-      }
+      this.$emit('geoComplete')
     },
     onGeolocationError(GeolocationError) {
       this.showMessage('定位失败，请刷新重试')
+      this.$emit('geoComplete')
     },
     test: debounce(function(val) {
       this.autoComplete.search(val, this.cb_autoComplete)

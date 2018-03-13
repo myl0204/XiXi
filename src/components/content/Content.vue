@@ -1,7 +1,7 @@
 <template>
   <div class="content-wrapper">
-    <v-map ref="map"></v-map>
-    <map-input @geoBtnClick="getLocation"></map-input>
+    <v-map ref="map" @geoComplete="onGeoComplete"></v-map>
+    <map-input ref="mapInput" @geoBtnClick="getLocation"></map-input>
     <!-- <List></List> -->
   </div>
 </template>
@@ -23,7 +23,10 @@ export default {
   },
   methods: {
     getLocation() {
-      this.$refs.map.getLocation()
+      this.$refs.map.geolocation.getCurrentPosition()
+    },
+    onGeoComplete() {
+      this.$refs.mapInput.isGeo = false
     }
   },
   components: {
