@@ -1,14 +1,16 @@
 # xixi-cat
     嘻嘻撸猫~ 仿嘀嘀打车（didi）项目。
 ## :point_right:[演示地址](https://myl0204.github.io/XiXi)
-Tips: 使用chrome开发者模式，切换为手机视图，切换后还请**刷新**一次^ ^
+Tips: 使用手机浏览器或者微信打开,PC端可以使用chrome开发者模式，切换为手机视图，切换后还请**刷新**一次^ ^
+
+手机端有更好的体验。
 
 登录验证码为6666，密码则为任意长度大于等于6的字符。
 ## 部分截图
 ![gif](https://raw.githubusercontent.com/myl0204/XiXi/master/img/Animation.gif)
 ![gif](https://raw.githubusercontent.com/myl0204/XiXi/master/img/Animation2.gif)
 ## todo
-:heavy_check_mark:改用高德地图
+改用高德地图:heavy_check_mark:
 
 能复原滴滴app多少是多少:muscle:
 ## Build Setup
