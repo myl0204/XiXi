@@ -85,8 +85,9 @@ export const storage = {
  *                     已存在的所有元素的高之和totalHeight
  */
 export function fillTheScreen(obj) {
+  const isWX = /micromessenger/.test(navigator.userAgent.toLowerCase())
   // why?
-  let height = document.documentElement.clientHeight - document.documentElement.offsetHeight
+  let height = isWX ? document.documentElement.clientHeight : document.documentElement.clientHeight - document.documentElement.offsetHeight
   if (!obj.target || !obj.totalHeight) return
   height = 1 - obj.totalHeight / height
   obj.target.style.height = height * 100 + 'vh'
