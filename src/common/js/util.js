@@ -85,7 +85,8 @@ export const storage = {
  *                     已存在的所有元素的高之和totalHeight
  */
 export function fillTheScreen(obj) {
-  let height = window.innerHeight
+  // why?
+  let height = document.documentElement.clientHeight - document.documentElement.offsetHeight
   if (!obj.target || !obj.totalHeight) return
   height = 1 - obj.totalHeight / height
   obj.target.style.height = height * 100 + 'vh'
@@ -95,6 +96,10 @@ export function fillTheScreen(obj) {
  * @param {HTML Object} el 目标节点
  * @param {number} x 水平方向的移动
  * @param {number} y 垂直方向的移动
+ * @param {Object} options 可选参数
+ * @param {Boolean} options.useTransfrom 是否通过transfrom来移动元素
+ * @param {Boolean} options.transitionTimingFunction transition的timingFunction
+ * @param {String} options.transitionDuration transition时间
  */
 export function translate(el, x, y, options) {
   const defaultOptions = {
