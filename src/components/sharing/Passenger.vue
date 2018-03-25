@@ -21,7 +21,6 @@ export default {
   },
   mounted() {
     this.maxMoveDistance = window.innerWidth
-    this.rightEl = this.$refs.customer.parentElement.querySelector('.out_of_screen-right')
   },
   data() {
     return {
@@ -34,6 +33,7 @@ export default {
   },
   methods: {
     touchStart(ev) {
+      this.rightEl = this.rightEl ? this.rightEl : this.$el.parentElement.querySelector('.out_of_screen-right')
       let touch = ev.changedTouches[0]
       this.touch.x1 = touch.pageX
       this.touchStartTime = Date.now()
@@ -49,12 +49,10 @@ export default {
         this.totalDiff = -this.maxMoveDistance
       }
       let el = ev.currentTarget
-      // let rightEl = el.parentElement.querySelector('.right-hidden')
       translate(el, this.totalDiff, 0)
       translate(this.rightEl, this.totalDiff, 0)
     },
     touchEnd(ev) {
-      // let el = this.$refs.customer
       let touch = ev.changedTouches[0]
       this.touch.x2 = touch.pageX
       let diff = this.touch.x2 - this.touch.x1

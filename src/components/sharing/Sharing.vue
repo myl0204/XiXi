@@ -36,8 +36,6 @@
 <script>
 import Icon from 'vue-awesome/components/Icon'
 import { fillTheScreen } from '@/common/js/util.js'
-import Passenger from './Passenger'
-import Driver from './Driver'
 export default {
   mounted() {
     // 计算内容高度
@@ -86,8 +84,8 @@ export default {
   },
   components: {
     Icon,
-    Passenger,
-    Driver
+    Passenger: () => import('./Passenger'),
+    Driver: () => import('./Driver')
   }
 }
 </script>

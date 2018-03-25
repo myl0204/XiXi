@@ -30,7 +30,6 @@ export default {
   },
   mounted() {
     this.maxMoveDistance = window.innerWidth
-    this.leftEl = this.$refs.owner.parentElement.querySelector('.out_of_screen-left')
   },
   data() {
     return {
@@ -43,7 +42,7 @@ export default {
   },
   methods: {
     touchStart(ev) {
-      // console.log(ev.currentTarget, ev.currentTarget)
+      this.leftEl = this.leftEl ? this.leftEl : this.$el.parentElement.querySelector('.out_of_screen-left')
       let touch = ev.changedTouches[0]
       this.touch.x1 = touch.pageX
       this.touchStartTime = Date.now()
