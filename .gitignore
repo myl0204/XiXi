@@ -12,5 +12,4 @@ debug.log
 *.ntvs*
 *.njsproj
 *.sln
-src/components/loading/Loading.vue
 *.vscode/
