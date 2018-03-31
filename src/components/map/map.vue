@@ -115,6 +115,7 @@ export default {
       }, delay)
     },
     onGeolocationComplete(GeolocationResult) {
+      console.log(GeolocationResult)
       if (GeolocationResult.info === 'SUCCESS') {
         this.lngLat = GeolocationResult.position
         const pois = GeolocationResult.pois.splice(0, 10)
