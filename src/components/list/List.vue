@@ -37,14 +37,14 @@ export default {
     }
   },
   created() {
-    // this.$http.get('api/city.json')
-    this.$http.get('/api/cityList')
+    this.$http.get('api/city.json')
+    // this.$http.get('/api/cityList')
       .then((res) => {
         if (res.status >= 200 && res.status < 300 || res.status === 304) {
-          if (res.data.errno === SUC_CODE) {
-            this.allCity = res.data.data
+          // if (res.data.errno === SUC_CODE) {
+          this.allCity = res.data.data
           }
-        }
+        // }
       })
   },
   computed: {
