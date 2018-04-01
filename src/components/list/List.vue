@@ -24,7 +24,7 @@ import Icon from 'vue-awesome/components/Icon'
 import ListInput from '@@/listinput/ListInput'
 import CityList from '@@/listcontent/CityList'
 import LocationList from '@@/listcontent/LocationList'
-const SUC_CODE = 0
+// const SUC_CODE = 0
 const CITY_LIST = 0
 const LOCATION_LIST = 1
 const MIXINPUT_LIST = 2
@@ -43,7 +43,7 @@ export default {
         if (res.status >= 200 && res.status < 300 || res.status === 304) {
           // if (res.data.errno === SUC_CODE) {
           this.allCity = res.data.data
-          }
+        }
         // }
       })
   },

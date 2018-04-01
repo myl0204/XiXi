@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import vMap from '@@/map/Map'
+import vMap from '../map/Map'
 import MapInput from '@@/mapinput/MapInput'
 // import List from '@@/list/List'
 export default {
