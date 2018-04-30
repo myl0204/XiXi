@@ -7,6 +7,7 @@ import axios from 'axios'
 // import router from './router'
 /* eslint-disable no-unused-vars */
 import 'vue-awesome/icons'
+import 'tab-slider/dist/index.css'
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
@@ -37,8 +38,8 @@ const store = new Vuex.Store({
     suggestedPois: [],
     isSearchingInfoVisible: false,
     isSearchingErrorInfoVisible: false,
-    listShowFlag: false,
-    pHolder: '',
+    isListVisible: false,
+    placeholder: '',
     listType: 1,
     listSubType: 0,
     cityInput: '',
@@ -51,15 +52,12 @@ const store = new Vuex.Store({
     setIpCity(state, city) {
       state.ipCity = city
     },
-    changeCity(state, newCity) {
+    updateCity(state, newCity) {
       state.curCity = newCity
     },
     changeAddress(state, payload) {
       state.address = payload
     },
-    // changeCustomAddress(state, payload) {
-    //   state.customAddress = payload
-    // },
     changeNearPois(state, newPois) {
       state.nearPois = newPois
     },
@@ -82,17 +80,17 @@ const store = new Vuex.Store({
       state.isSearchingErrorInfoVisible = false
     },
     showList(state) {
-      state.listShowFlag = true
+      state.isListVisible = true
     },
     hideList(state) {
-      state.listShowFlag = false
+      state.isListVisible = false
     },
     toggleList(state, payload) {
       state.listType = payload.listType
-      state.pHolder = payload.pHolder
+      state.placeholder = payload.placeholder
       state.listSubType = payload.listSubType
     },
-    cityInputChanged(state, newVal) {
+    updateCityInput(state, newVal) {
       state.cityInput = newVal
     },
     locationInputChanged(state, newVal) {

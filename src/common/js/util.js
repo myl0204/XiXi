@@ -88,8 +88,9 @@ export function fillTheScreen(obj) {
   const isWX = /micromessenger/.test(navigator.userAgent.toLowerCase())
   // why?
   let height = isWX ? document.documentElement.clientHeight : document.documentElement.clientHeight - document.documentElement.offsetHeight
-  if (!obj.target || !obj.totalHeight) return
-  height = 1 - obj.totalHeight / height
+  if (!obj.target || !obj.height) return
+  height = 1 - obj.height / height
+  console.log(obj.taget, obj.height)
   obj.target.style.height = height * 100 + 'vh'
 }
 /**

@@ -4,35 +4,47 @@
     <h2 class="city-flag-fixed" ref="fixedFlag">{{fixedFlag}}</h2>
     <div class="other-city" ref="listWrapper">
       <ul>
-        <li v-for="cityObject in cityListToShow" :key="cityObject.flag" ref="list">
+        <li
+          v-for="cityObject in filteredCityList"
+          :key="cityObject.flag"
+          ref="list">
           <h2 class="city-flag">{{cityObject.flag}}</h2>
-          <ul @touchstart="highlightCity($event)" @touchend="normalizeCity($event)">
-            <li v-for="city in cityObject.cityList" class="city-item" 
-            :key="city.eName" :data-cname="city.name" @click="changeCity($event)">{{city.name}}</li>
+          <ul
+            @touchstart="highlightCity($event)"
+            @touchend="normalizeCity($event)">
+            <li
+              v-for="city in cityObject.cityList"
+              class="city-item" 
+              :key="city.eName"
+              :data-cname="city.name"
+              @click="changeCity($event)">{{city.name}}</li>
           </ul>
         </li>
       </ul>
     </div>
-    <div class="info" v-show="!infoShowFlag"><p class="text">暂无结果，换个词试试吧！</p></div>
+    <div class="info" v-show="!isInfoVisible">
+      <p class="text">暂无结果，换个词试试吧！</p>
+    </div>
     <list-nav  
-      :sequenceLetter="sequenceLetter"
+      :navLetterList="navLetterList"
       @listNavTouchstart="_scroll"
-      @listNavTouchend="hideLetter"
       @listNavTouchmove="_scroll">
     </list-nav>
   </div>
 </template>
 
 <script>
-// import Icon from 'vue-awesome/components/Icon'
 import BScroll from 'better-scroll'
 import listNav from '@@/listnav/listNav'
+import { mapState, mapMutations } from 'vuex'
 const FLAG_HEIGHT = 40
 export default {
   props: {
     allCity: {
       type: Array,
-      default: [{}]
+      default() {
+        return [{}]
+      }
     }
   },
   mounted() {
@@ -59,89 +71,49 @@ export default {
     }
   },
   computed: {
-    ipCity() {
-      return this.$store.state.ipCity
-    },
-    listShowFlag() {
-      return this.$store.state.listShowFlag
-    },
-    input() {
-      return this.$store.state.cityInput
-    },
-    cityListToShow() {
-      if (!this.input) {
+    ...mapState([
+      'ipCity',
+      'isListVisible',
+      'cityInput'
+    ]),
+    filteredCityList() {
+      if (!this.cityInput) {
         return this.allCity
       }
-      let firstLetter = this.input.slice(0, 1).toUpperCase()
-      let nameReg = new RegExp('^' + this.input, 'i')
+      const firstLetter = this.cityInput.slice(0, 1).toUpperCase()
+      const nameReg = new RegExp('^' + this.cityInput, 'i')
       // 在热门城市中的检索结果
-      let hotCityResult = this.allCity[0].cityList.filter((cityObj) => {
-        return cityObj.eName.match(nameReg)
+      const hotCityResult = this.allCity[0].cityList.filter((city) => {
+        return city.eName.match(nameReg)
       })
       // 当输入为字母时的情况
       if (firstLetter.charCodeAt(0) >= 65 && firstLetter.charCodeAt(0) <= 90) {
-        let sequenceNumber = this.sequenceLetter.indexOf(firstLetter)
-        if (sequenceNumber !== -1) {
-          // 只有一个字母,输出首字母为该字母的所有城市
-          // 否则进行字母配对
-          if (this.input.length === 1) {
-            // hotCityResult = this.allCity[0].cityList.filter((cityObj) => {
-            //   return cityObj.eName.match(nameReg)
-            // })
-            if (hotCityResult.length) {
-              return [
-                {
-                  flag: '★热门城市',
-                  cityList: hotCityResult
-                },
-                this.allCity[sequenceNumber]
-              ]
-            } else {
-              return [this.allCity[sequenceNumber]]
+        const index = this.navLetterList.indexOf(firstLetter)
+        if (index !== -1) {
+          const cityListObj = this.cityInput.length === 1
+            ? this.allCity[index]
+            : {
+              flag: firstLetter.toUpperCase(),
+              cityList: this.allCity[index].cityList.filter(city => city.eName.match(nameReg))
             }
-          } else {
-            // let result = []
-            // debugger
-            /* eslint-disable no-unused-vars */
-            // let aa = this.allCity[sequenceNumber]
-            let cityList = this.allCity[sequenceNumber].cityList
-            cityList = cityList.filter((cityObj) => {
-              return cityObj.eName.match(nameReg)
-            })
-            if (cityList.length) {
-              if (hotCityResult.length) {
-                return [
-                  {
-                    flag: '★热门城市',
-                    cityList: hotCityResult
-                  },
-                  {
-                    flag: firstLetter.toUpperCase(),
-                    cityList
-                  }
-                ]
-              } else {
-                return [
-                  {
-                    flag: firstLetter.toUpperCase(),
-                    cityList: cityList
-                  }
-                ]
-              }
-            } else {
-              // 返回[{}]是为了不报错
-              return [{}]
-            }
-          }
+          return hotCityResult.length
+            ? [
+              {
+                flag: '★热门城市',
+                cityList: hotCityResult
+              },
+              cityListObj
+            ]
+            : [cityListObj]
         } else {
           return [{}]
         }
       } else { // 汉字情况
-        let result = []
-        let nameReg = new RegExp(this.input)
+        const result = []
+        const nameReg = new RegExp(this.cityInput)
         this.allCity.forEach((cityListObj) => {
-          let cityList = cityListObj['cityList'].filter((cityObj) => {
-            return cityObj.name.match(nameReg)
+          const cityList = cityListObj['cityList'].filter((city) => {
+            return city.name.match(nameReg)
           })
           if (cityList.length) {
             result.push({flag: cityListObj['flag'], cityList})
@@ -150,16 +122,20 @@ export default {
         return result
       }
     },
-    infoShowFlag() {
-      return !(!this.cityListToShow[0] || !this.cityListToShow[0].flag)
+    isInfoVisible() {
+      return !(!this.filteredCityList[0] || !this.filteredCityList[0].flag)
     },
-    sequenceLetter() {
+    navLetterList() {
       return this.allCity.map((val) => {
         return val.flag.slice(0, 1)
       })
     }
   },
   methods: {
+    ...mapMutations([
+      'updateCity',
+      'updateCityInput'
+    ]),
     highlightCity(ev) {
       ev.target.classList.add('active')
     },
@@ -167,27 +143,25 @@ export default {
       ev.target.classList.remove('active')
     },
     changeCity(ev) {
-      let newCity = ev.target.dataset.cname
-      this.$store.commit('changeCity', newCity)
+      const newCity = ev.target.dataset.cname
+      this.updateCity(newCity)
       this.$emit('city-changed')
     },
     clearInput() {
-      this.$store.commit('cityInputChanged', '')
-    },
-    hideLetter() {
-      this.letterShowFlag = false
+      this.updateCityInput('')
     },
     _scroll(index) {
       this.scroll.scrollToElement(this.$refs.list[index])
       this.scrollY = this.scroll.y
     },
     _calculateHeight() {
-      let list = this.$refs.list
+      const list = this.$refs.list
+      let height = 0
       this.listHeight = [0]
-      for (let i = 0, height = 0, length = list.length; i < length; i++) {
-        height += list[i].clientHeight
+      list.forEach(listItem => {
+        height += listItem.clientHeight
         this.listHeight.push(height)
-      }
+      })
     }
   },
   watch: {
@@ -198,10 +172,10 @@ export default {
         this.scrollY = 0
       }
     },
-    cityListToShow() {
-      let hasResult = !!this.cityListToShow[0]
+    filteredCityList() {
+      const hasResult = !!this.filteredCityList[0]
       if (hasResult) {
-        this.fixedFlag = this.cityListToShow[0].flag
+        this.fixedFlag = this.filteredCityList[0].flag
         setTimeout(() => {
           this.scroll.refresh()
           this.scrollY = 0
@@ -209,18 +183,16 @@ export default {
       }
     },
     scrollY(newVal) {
-      let listHeight = this.listHeight
-      for (let i = 0; i < listHeight.length - 1; i++) {
-        let h1 = listHeight[i]
-        let h2 = listHeight[i + 1]
+      this.listHeight.reduce((h1, h2, index) => {
         if (-newVal >= h1 && -newVal < h2) {
-          let flag = this.sequenceLetter[i]
+          const flag = this.navLetterList[index - 1]
           this.fixedFlag = flag === '★' ? '★热门城市' : flag
-          let diff = h2 + newVal
-          let fixedFlagTop = diff < FLAG_HEIGHT ? diff - FLAG_HEIGHT : 0
+          const diff = h2 + newVal
+          const fixedFlagTop = diff < FLAG_HEIGHT ? diff - FLAG_HEIGHT : 0
           this.$refs.fixedFlag.style.transform = `translateY(${fixedFlagTop}px)`
         }
-      }
+        return h2
+      }, this.listHeight[0])
     }
   },
   components: {

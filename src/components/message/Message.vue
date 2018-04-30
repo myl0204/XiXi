@@ -1,6 +1,6 @@
 <template>
   <modal
-    :showFlag="showFlag"
+    :isVisible="isVisible"
     :hasContent="false"
     :hasCloseIcon="false"
     :hasBtn="false"
@@ -37,14 +37,13 @@ export default {
   },
   data() {
     return {
-      showFlag: true
+      isVisible: true
     }
   },
-  updated() {
-    const delay = this.delay
+  mounted() {
     setTimeout(() => {
-      this.showFlag = false
-    }, delay)
+      this.isVisible = false
+    }, this.delay)
   },
   components: {
     Icon,

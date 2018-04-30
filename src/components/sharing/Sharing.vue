@@ -21,71 +21,53 @@
         </div>
       </div>
     </div>
-    <div class="sharing-content-wrapper">
-      <passenger class="out_of_screen out_of_screen-left" @transitionend.native="updateRouter($event, 'passenger')"/>
-        <router-view 
-          class="sharing-content" 
-          :transitionName="transitionName"
-          @dragedSlide="confirmDragSlide"
-        />
-      <driver class="out_of_screen out_of_screen-right" @transitionend.native="updateRouter($event, 'driver')"/>
-    </div>
+    <tab-slider
+      class="sharing-content-wrapper"
+      :comp="compData"
+      @success="toggleType"/>
   </div>
-</template>
+</template>slider
 
 <script>
 import Icon from 'vue-awesome/components/Icon'
+import tabSlider from 'tab-slider'
 import { fillTheScreen } from '@/common/js/util.js'
 export default {
   mounted() {
     // 计算内容高度
     const target = document.querySelector('.sharing-content-wrapper')
-    const totalHeight = 116
-    fillTheScreen({target, totalHeight})
-  },
-  updated() {
-    this.toggleType()
-  },
-  // 通过更改transitionName来改变动画
-  beforeRouteUpdate(to, from, next) {
-    this.transitionName = this.isDragedSlide ? '' : 'slide'
-    next()
+    const height = 116
+    // console.log(target)
+    fillTheScreen({target, height})
   },
   data() {
     return {
-      transitionName: 'slide',
-      isDragedSlide: false
+      compData: [
+        {
+          name: 'passenger',
+          component: () => import('./Passenger')
+        },
+        {
+          name: 'driver',
+          component: () => import('./Driver')
+        }
+      ]
     }
   },
   methods: {
     // 保持“下划线”和当前路由一致
-    toggleType() {
+    toggleType(routeName) {
       const underline = this.$refs.underline
-      const type = this.$route.name
-      if (type === 'passenger') {
+      if (routeName === 'passenger') {
         underline.style.transform = `translateX(0)`
-      } else if (type === 'driver') {
+      } else if (routeName === 'driver') {
         underline.style.transform = `translateX(57px)`
-      }
-    },
-    // 是否通过手指拖动触发滑屏
-    confirmDragSlide() {
-      this.isDragedSlide = true
-    },
-    updateRouter(ev, routeName) {
-      if (this.isDragedSlide) {
-        let el = ev.target
-        this.$router.push(routeName)
-        el.style.transform = ''
-        el.style.transitionDuration = '0s'
-        this.isDragedSlide = false
       }
     }
   },
   components: {
     Icon,
-    Passenger: () => import('./Passenger'),
-    Driver: () => import('./Driver')
+    tabSlider
   }
 }
 </script>

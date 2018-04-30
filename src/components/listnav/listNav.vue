@@ -1,11 +1,18 @@
 <template>
   <div class="list-nav">
     <ul>
-      <li v-for="(letter, index) in sequenceLetter" class="item" :key="letter" ref="list"
-      @touchstart="onTouchstart($event, index)" @touchend="onTouchend($event)" @touchmove.prevent="onTouchmove($event, index)"
-      >{{letter}}</li>
+      <li
+        v-for="(letter, index) in navLetterList"
+        class="item"
+        :key="letter"
+        ref="list"
+        @touchstart="onTouchstart($event, index)"
+        @touchend="onTouchend($event)"
+        @touchmove.prevent="onTouchmove($event, index)">
+        {{letter}}
+      </li>
     </ul>
-    <div class="letter" v-show="letterShowFlag">{{currentLetter}}</div>
+    <div class="letter" v-show="isLetterVisible">{{currentLetter}}</div>
   </div>
 </template>
 
@@ -13,40 +20,38 @@
 const NAV_HEIGHT = 18
 export default {
   props: {
-    sequenceLetter: {
+    navLetterList: {
       type: Array
     }
   },
   data() {
     return {
-      letterShowFlag: false,
+      isLetterVisible: false,
       currentLetter: '',
       touch: {}
     }
   },
   methods: {
     onTouchstart(ev, index) {
-      this.letterShowFlag = true
-      this.currentLetter = this.sequenceLetter[index]
-      let touch = ev.changedTouches[0]
+      this.isLetterVisible = true
+      this.currentLetter = this.navLetterList[index]
+      const touch = ev.changedTouches[0]
       this.touch.y1 = touch.pageY
       this.$emit('listNavTouchstart', index)
     },
     onTouchend(ev) {
-      this.letterShowFlag = false
-      this.$emit('listNavTouchend')
+      this.isLetterVisible = false
     },
-    onTouchmove(ev, index) {
-      let touch = ev.changedTouches[0]
+    onTouchmove(ev, currentIndex) {
+      const touch = ev.changedTouches[0]
       this.touch.y2 = touch.pageY
-      let dif = (this.touch.y2 - this.touch.y1) / NAV_HEIGHT
-      index = index + parseInt(dif)
-      if (index >= this.sequenceLetter.length) {
-        index = this.sequenceLetter.length - 1
-      } else if (index < 0) {
-        index = 0
-      }
-      this.currentLetter = this.sequenceLetter[index]
+      const dif = (this.touch.y2 - this.touch.y1) / NAV_HEIGHT
+      const index = currentIndex + parseInt(dif) >= this.navLetterList.length
+        ? this.navLetterList.length - 1
+        : index < 0
+        ? 0
+        : index
+      this.currentLetter = this.navLetterList[index]
       this.$emit('listNavTouchmove', index)
     }
   }

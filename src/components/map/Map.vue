@@ -1,12 +1,13 @@
 <template>
   <div id="map-container" ref="map">
-    <map-marker ref="marker" :isTimeInfoVisible="isTimeInfoVisible"></map-marker>
+    <map-marker
+      ref="marker"
+      :isTimeInfoVisible="isTimeInfoVisible"/>
     <message 
       :message="message" 
       :iconName="'exclamation-circle'" 
       v-show="isMessageVisible"
-      :delay="messageDelay">
-    </message>
+      :delay="messageDelay"/>
   </div>
 </template>
 
@@ -15,6 +16,8 @@ import { fillTheScreen } from '@/common/js/util.js'
 import MapMarker from '@@/mapMarker/Marker'
 import Message from '@@/message/Message'
 import debounce from 'lodash.debounce'
+import { mapState, mapMutations } from 'vuex'
+const HEADER_HEIGHT = 86
 export default {
   mounted() {
     this.$nextTick(() => {
@@ -30,19 +33,17 @@ export default {
     }
   },
   computed: {
-    address() {
-      return this.$store.state.address
-    },
-    locationInput() {
-      return this.$store.state.locationInput
-    }
+    ...mapState([
+      'address',
+      'locationInput'
+    ])
   },
   methods: {
     _initMap() {
       // 使地图容器自适应窗口余下高度
       const target = this.$refs.map
-      const totalHeight = 86 // 这里86是header的高度
-      fillTheScreen({target, totalHeight})
+       // 这里86是header的高度
+      fillTheScreen({target, height: HEADER_HEIGHT})
       // 地图选项
       const mapOptions = {
         mapStyle: 'amap://styles/9243d6059d95b04e053596c4ab715c52'
@@ -61,10 +62,8 @@ export default {
           showMarker: true,        // 定位成功后在定位到的位置显示点标记，默认：true
           showCircle: true,        // 定位成功后用圆圈表示定位精度范围，默认：true
           panToLocation: true,    // 定位成功后将定位到的位置作为地图中心点，默认：true
-          extensions: 'all'       // 定位成功后返回周边POI信息
-          // noIpLocate: 1,
-          // GeoLocationFirst: true
-          // zoomToAccuracy: true      // 定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+          extensions: 'all',       // 定位成功后返回周边POI信息
+          zoomToAccuracy: true
         })
         this.map.addControl(this.geolocation)
         // 通过ip信息获取当前城市
@@ -72,18 +71,23 @@ export default {
           if (status === 'complete') {
             const city = result.city
             this.setIpCity(city)
-            this.changeCity(city)
+            this.updateCity(city)
             this._initMapSearchService(city)
           }
         })
-        // 注册定位事件
-        AMap.event.addListener(this.geolocation, 'complete', this.onGeolocationComplete)
-        AMap.event.addListener(this.geolocation, 'error', this.onGeolocationError)
-        this.geolocation.getCurrentPosition()
-        // 注册地图拖拽事件
-        AMap.event.addListener(this.map, 'dragstart', this.onMapDragStart)
-        AMap.event.addListener(this.map, 'dragend', this.onMapDragEnd)
+        this._initMapGeolocation()
+        this._initMapDragEvent()
+        this.getCurrentPosition()
       })
+    },
+    // 注册化地图定位事件
+    _initMapGeolocation() {
+      AMap.event.addListener(this.geolocation, 'complete', this.onGeolocationComplete)
+      AMap.event.addListener(this.geolocation, 'error', this.onGeolocationError)
+    },
+    _initMapDragEvent() {
+      AMap.event.addListener(this.map, 'dragstart', this.onMapDragStart)
+      AMap.event.addListener(this.map, 'dragend', this.onMapDragEnd)
     },
     // 初始化地图搜索相关服务
     _initMapSearchService(city) {
@@ -94,14 +98,19 @@ export default {
           city,
           extensions: 'all'
         })
-        this.placeSearch.setType('生活服务')
-        this.placeSearch.search('猫', (status, result) => {
-          if (status === 'complete' && result.info === 'OK') {
-            const pois = result.poiList.pois
-            this.changeSuggestedPois(pois)
-          }
-        })
       })
+    },
+    _initSuggestedPois() {
+      this.placeSearch.setType('生活服务')
+      this.placeSearch.search('猫', (status, result) => {
+        if (status === 'complete' && result.info === 'OK') {
+          const pois = result.poiList.pois
+          this.changeSuggestedPois(pois)
+        }
+      })
+    },
+    getCurrentPosition() {
+      this.geolocation.getCurrentPosition()
     },
     moveCenter(lngLat) {
       this.map.panTo(lngLat)
@@ -111,19 +120,24 @@ export default {
       this.messageDelay = delay
       this.isMessageVisible = true
       setTimeout(() => {
-        this.isMessageVisible = false
-      }, delay)
+        this.hideMessage()
+      }, this.messageDelay)
+    },
+    hideMessage() {
+      this.isMessageVisible = false
     },
     onGeolocationComplete(GeolocationResult) {
       console.log(GeolocationResult)
       if (GeolocationResult.info === 'SUCCESS') {
         this.lngLat = GeolocationResult.position
-        const pois = GeolocationResult.pois.splice(0, 10)
+        const pois = GeolocationResult.pois
+          ? GeolocationResult.pois.splice(0, 10)
+          : [{name: '错误信息'}]
         const address = {
           name: pois[0].name,
           lngLat: this.lngLat
         }
-        this.map.setZoom(16)
+        // this.map.setZoom(16)
         // 设置当前地址
         this.changeAddress(address)
         // 设置附近的pois，即起点
@@ -135,14 +149,13 @@ export default {
       this.$emit('geoComplete')
     },
     onGeolocationError(GeolocationError) {
-      this.showMessage('定位失败，请刷新重试')
       this.$emit('geoComplete')
+      this.showMessage('定位失败，请刷新重试')
     },
-    test: debounce(function(val) {
+    keywordSearch: debounce(function(val) {
       this.autoComplete.search(val, this.cb_autoComplete)
     }, 800),
     cb_autoComplete(status, result) {
-      // console.log(status)
       if (status === 'complete') {
         // 过滤掉没有location信息的无效地点
         const pois = result.tips.filter((item) => {
@@ -179,13 +192,13 @@ export default {
     },
     onMapDragStart() {
       this.isTimeInfoVisible = false
-      this.$store.commit('changeAddress', {name: '正在获取撸猫地点'})
+      this.changeAddress({name: '正在获取撸猫地点'})
     },
     onMapDragEnd() {
       this.$refs.marker.isLoading = true
       this.isTimeInfoVisible = true
       this.$refs.marker.calculateTime()
-      let center = this.map.getCenter()
+      const center = this.map.getCenter()
       this.getNearPois(center, true)
     },
     // 切换猫种时，刷新“等候时间”，提升交互
@@ -196,52 +209,32 @@ export default {
       }, 200)
       this.$refs.marker.calculateTime()
     },
-    setIpCity(city) {
-      this.$store.commit('setIpCity', city)
-    },
-    changeCity(city) {
-      this.$store.commit('changeCity', city)
-    },
-    changeNearPois(pois) {
-      this.$store.commit('changeNearPois', pois)
-    },
-    changeSuggestedPois(pois) {
-      this.$store.commit('changeSuggestedPois', pois)
-    },
-    changeSearchPois(pois) {
-      this.$store.commit('changeSearchPois', pois)
-    },
-    changeAddress(address) {
-      this.$store.commit('changeAddress', address)
-    },
-    showSearchingInfo() {
-      this.$store.commit('showSearchingInfo')
-    },
-    hideSearchingInfo() {
-      this.$store.commit('hideSearchingInfo')
-    },
-    showSearchingErrorInfo() {
-      this.$store.commit('showSearchingErrorInfo')
-    },
-    hideSearchingErrorInfo() {
-      this.$store.commit('hideSearchingErrorInfo')
-    }
+    ...mapMutations([
+      'setIpCity',
+      'updateCity',
+      'changeNearPois',
+      'changeSuggestedPois',
+      'changeSearchPois',
+      'changeAddress',
+      'showSearchingInfo',
+      'hideSearchingInfo',
+      'showSearchingErrorInfo',
+      'hideSearchingErrorInfo'
+    ])
   },
   watch: {
     address(newAddr) {
       if (!newAddr.lngLat) return
       const lngLat = newAddr.lngLat
-      if (newAddr.ifMove) this.moveCenter(lngLat)
+      // if (newAddr.ifMove) this.moveCenter(lngLat)
       this.getNearPois(lngLat)
     },
     locationInput(newVal) {
       this.hideSearchingErrorInfo()
       this.showSearchingInfo()
-      if (newVal === '') {
-        this.hideSearchingInfo()
-      } else {
-        this.test(newVal)
-      }
+      newVal === ''
+        ? this.hideSearchingInfo()
+        : this.keywordSearch(newval)
     }
   },
   components: {

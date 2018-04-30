@@ -1,20 +1,24 @@
 <template>
   <transition name="slide-fade">
-    <div class="list-wrapper" v-show="listShowFlag">
+    <div class="list-wrapper" v-show="isListVisible">
       <list-input
         @onListHide="hideList"
         :listType="listType">
         <span class="cur-city" @click="toggleViewToBoth" :slot="citySlot">
           <span class="text">{{curCity}}</span>
           <span class="icon">
-            <Icon name="angle-down"></Icon>
+            <Icon name="angle-down"/>
           </span>
         </span>
         <div class="input location-input" :slot="inputSlot" @click="toggleViewToLocation">
           <input type="text" placeholder="你从哪开始撸猫" :value="locationInput">
         </div>
       </list-input>
-      <component :is="listView" :allCity="listType === 1 ? '' : allCity" @city-changed="chooseCity" ref="listContent"></component>
+      <component
+        :is="listView"
+        :allCity="allCity"
+        @city-changed="onCityChange"
+        ref="listContent"/>
     </div> 
   </transition>
 </template>
@@ -24,12 +28,11 @@ import Icon from 'vue-awesome/components/Icon'
 import ListInput from '@@/listinput/ListInput'
 import CityList from '@@/listcontent/CityList'
 import LocationList from '@@/listcontent/LocationList'
-// const SUC_CODE = 0
+import { mapState, mapMutations } from 'vuex'
 const CITY_LIST = 0
 const LOCATION_LIST = 1
 const MIXINPUT_LIST = 2
 const DEFALUT_LISTSUBTYPE = 0
-// const LOCATION_TO_LISTSUBTYPE = 2
 export default {
   data() {
     return {
@@ -37,89 +40,68 @@ export default {
     }
   },
   created() {
-    this.$http.get('api/city.json')
-    // this.$http.get('/api/cityList')
+    this.$http.get('/api/city.json')
       .then((res) => {
-        if (res.status >= 200 && res.status < 300 || res.status === 304) {
-          // if (res.data.errno === SUC_CODE) {
-          this.allCity = res.data.data
-        }
-        // }
+        this.allCity = res.data
       })
   },
   computed: {
-    curCity() {
-      return this.$store.state.curCity
-    },
-    listType() {
-      return this.$store.state.listType
-    },
-    listSubType() {
-      return this.$store.state.listSubType
-    },
+    ...mapState([
+      'curCity',
+      'listType',
+      'listSubtype',
+      'isListVisible',
+      'placeholder',
+      'locationInput'
+    ]),
     listView() {
-      return this.listType === CITY_LIST || this.listType === MIXINPUT_LIST ? CityList : LocationList
-    },
-    listShowFlag() {
-      return this.$store.state.listShowFlag
-    },
-    pHolder() {
-      return this.$store.state.pHolder
+      return this.listType === CITY_LIST || this.listType === MIXINPUT_LIST ? 'CityList' : 'LocationList'
     },
     citySlot() {
       return this.listType === CITY_LIST ? '' : this.listType === LOCATION_LIST ? 'city' : ''
     },
     inputSlot() {
       return this.listType === CITY_LIST ? '' : this.listType === MIXINPUT_LIST ? 'input' : ''
-    },
-    locationInput() {
-      return this.$store.state.locationInput
     }
   },
   methods: {
-    hideList() {
-      this.$store.commit('hideList')
+    ...mapMutations([
+      'hideList',
+      'updateCityInput',
+      'toggleList'
+    ]),
+    clearInput() {
+      this.updateCityInput('')
     },
     toggleViewToBoth() {
-      this.$store.commit('toggleList', {
+      this.toggleList({
         listType: MIXINPUT_LIST,
-        pHolder: '城市中文名或拼音',
+        placeholder: '城市中文名或拼音',
         listSubType: DEFALUT_LISTSUBTYPE
       })
     },
     toggleViewToLocation() {
-      this.$store.commit('toggleList', {
+      this.toggleList({
         listType: LOCATION_LIST,
-        pHolder: '你从哪开始撸猫',
+        placeholder: '你从哪开始撸猫',
         listSubType: this.currentListSubType
       })
       // 清空cityinput内容
-      this.$store.commit('cityInputChanged', '')
+      this.clearInput()
     },
-    chooseCity() {
+    onCityChange() {
       this.listType === CITY_LIST ? this.hideList() : this.$store.commit('toggleList', {
-        pHolder: '从哪开始撸猫',
+        placeholder: '从哪开始撸猫',
         listType: LOCATION_LIST,
         listSubType: this.currentListSubType
       })
     }
-    // afterEnter() {
-    //   this.$refs.listContent.scroll.refresh()
-    //   // 当前列表子类型
-    //   this.currentListSubType = this.listSubType
-    //   // 每次打开类型为“到哪去”的LocationList，都执行一次初始化搜索
-    //   // 在List组件或者LocationList组件中监听curCity的变化无法使LocationList组件执行相关动作
-    //   // 因为改变city时，LocationList组件并没有被引用。
-    //   if (this.listSubType === LOCATION_TO_LISTSUBTYPE) {
-    //     this.$refs.listContent.infoShowFlag = true
-    //     this.$refs.listContent.searchService.setLocation(this.curCity)
-    //     this.$refs.listContent.initSuggestedPois()
-    //   }
-    // }
   },
   components: {
     Icon,
-    ListInput
+    ListInput,
+    CityList,
+    LocationList
   }
 }
 </script>

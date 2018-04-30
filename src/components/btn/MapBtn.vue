@@ -1,6 +1,6 @@
 <template>
   <span class="btn">
-    <Icon name="location-arrow"></Icon>
+    <Icon name="location-arrow"/>
   </span>
 </template>
 

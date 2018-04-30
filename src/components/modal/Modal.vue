@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-wrapper" v-show="showFlag">
+  <div class="modal-wrapper" v-show="isVisible">
     <div class="modal">
       <div class="modal-icon" v-if="hasIcon">
         <slot name="icon"></slot>
@@ -33,7 +33,7 @@ import Icon from 'vue-awesome/components/Icon'
 import Loading from '@@/loading/Loading'
 export default {
   props: {
-    showFlag: {
+    isVisible: {
       type: Boolean,
       default: false
     },

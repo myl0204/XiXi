@@ -5,7 +5,7 @@
     <div class="input city-input">
       <input 
         type="text" 
-        :placeholder="pHolder" 
+        :placeholder="placeholder" 
         :value="input" 
         @input="inputChanged($event)"
         ref="input">
@@ -38,8 +38,8 @@ export default {
     }
   },
   computed: {
-    pHolder() {
-      return this.$store.state.pHolder
+    placeholder() {
+      return this.$store.state.placeholder
     },
     input() {
       return this.listType === CITY_LIST || this.listType === MIXINPUT_LIST ? this.$store.state.cityInput : this.$store.state.locationInput
@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     clearInput() {
-      this.listType === CITY_LIST || this.listType === MIXINPUT_LIST ? this.$store.commit('cityInputChanged', '') : this.$store.commit('locationInputChanged', '')
+      this.listType === CITY_LIST || this.listType === MIXINPUT_LIST ? this.$store.commit('updateCityInput', '') : this.$store.commit('locationInputChanged', '')
     },
     hideList() {
       this.clearInput()
@@ -55,7 +55,7 @@ export default {
     },
     inputChanged(ev) {
       if (this.listType === CITY_LIST || this.listType === MIXINPUT_LIST) {
-        this.$store.commit('cityInputChanged', ev.target.value)
+        this.$store.commit('updateCityInput', ev.target.value)
       } else if (this.listType === LOCATION_LIST) {
         this.$store.commit('locationInputChanged', ev.target.value)
       }

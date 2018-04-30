@@ -33,27 +33,32 @@
 </template>
 
 <script>
-import City from '@@/city/City'
 import Icon from 'vue-awesome/components/Icon'
 const TIME_TYPE_NOW = 0
 const LOCATION_LIST = 1
 /* eslint-disable no-unused-vars */
 const LOCATION_FROM_LISTSUBTYPE = 1
 const LOCATION_TO_LISTSUBTYPE = 2
+import { mapMutations } from 'vuex'
 export default {
+  props: {
+    isGeo: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       nowFlag: true,
       addressFromHighlight: false,
       addresstoHighlight: false,
-      isGeo: false,
       locationListTypeFrom: {
         listSubType: LOCATION_FROM_LISTSUBTYPE,
-        pHolder: '从哪开始撸猫'
+        placeholder: '从哪开始撸猫'
       },
       locationListTypeTo: {
         listSubType: LOCATION_TO_LISTSUBTYPE,
-        pHolder: '去哪撸猫'
+        placeholder: '去哪撸猫'
       }
     }
   },
@@ -64,11 +69,10 @@ export default {
   },
   methods: {
     clickGeoBtn() {
-      this.isGeo = true
       this.$emit('geoBtnClick')
     },
-    changeTimeType(type) {
-      if (type === TIME_TYPE_NOW) {
+    changeTimeType(timieType) {
+      if (timieType === TIME_TYPE_NOW) {
         this.$refs['active-circle'].style.transform = ''
         this.nowFlag = true
       } else {
@@ -86,18 +90,17 @@ export default {
     //   this.$store.commit('showList')
     // },
     showLocationList(type) {
-      let {listSubType, pHolder} = type
+      let {listSubType, placeholder} = type
       this.$store.commit('showList')
       this.$store.commit('toggleList', {
         listType: LOCATION_LIST,
-        pHolder,
+        placeholder,
         listSubType
       })
     }
   },
   components: {
-    Icon,
-    City
+    Icon
   }
 }
 </script>
@@ -137,7 +140,6 @@ export default {
       text-align: center;
       font-size: 12px;
       background: transparent;
-      // z-index: 1;
       &.active {
         position: absolute;
         left: 2px;
@@ -152,23 +154,17 @@ export default {
   .input-location {
     position: relative;
     width: 100%;
-    // display: flex;
-    // flex-flow: column;
-    // height: 100px;
     margin-top: 5px;
     border-radius: 1px;
     box-shadow: 1px 1px 1px rgba(0, 0, 0, .1), -1px -1px 1px rgba(0, 0, 0, .1);
     background-color: #fff;
     transform-style: preserve-3d;
     .appointment {
-      // position: absolute;
-      // top: -50%;
       width: 100%;
       height: 50px;
       line-height: 50px;
       text-align: center;
       font-size: 14px;
-      // transition: all .3s;
       transform-origin: center top;
       @include border-1px-bottom;
       &.rotate-in-enter-active, &.rotate-in-leave-active {
