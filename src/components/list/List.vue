@@ -40,7 +40,7 @@ export default {
     }
   },
   created() {
-    this.$http.get('/api/city.json')
+    this.$http.get('/XiXi/api/city.json')
       .then((res) => {
         this.allCity = res.data
       })
