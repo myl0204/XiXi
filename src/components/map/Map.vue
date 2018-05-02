@@ -35,6 +35,8 @@ export default {
   computed: {
     ...mapState([
       'address',
+      'ipCity',
+      'curCity',
       'locationInput'
     ])
   },
@@ -78,6 +80,7 @@ export default {
         this._initMapGeolocation()
         this._initMapDragEvent()
         this.getCurrentPosition()
+        // this._initSuggestedPois()
       })
     },
     // 注册化地图定位事件
@@ -98,6 +101,7 @@ export default {
           city,
           extensions: 'all'
         })
+        this._initSuggestedPois()
       })
     },
     _initSuggestedPois() {
@@ -127,12 +131,11 @@ export default {
       this.isMessageVisible = false
     },
     onGeolocationComplete(GeolocationResult) {
-      console.log(GeolocationResult)
       if (GeolocationResult.info === 'SUCCESS') {
         this.lngLat = GeolocationResult.position
         const pois = GeolocationResult.pois
           ? GeolocationResult.pois.splice(0, 10)
-          : [{name: '错误信息'}]
+          : [{name: '定位出错，请尝试手机'}]
         const address = {
           name: pois[0].name,
           lngLat: this.lngLat
@@ -209,6 +212,23 @@ export default {
       }, 200)
       this.$refs.marker.calculateTime()
     },
+    setPlaceSearchService(newCity) {
+      this.placeSearch.setCity(newCity)
+      this.placeSearch.setType('政府机构及社会团体')
+      this.placeSearch.search(`${newCity}政府`, (status, result) => {
+        if (status === 'complete' && result.info === 'OK') {
+          const poi = result.poiList.pois[0]
+          this.changeAddress({
+            name: poi.name,
+            lngLat: new AMap.LngLat(poi.location.lng, poi.location.lat),
+            ifMove: true
+          })
+        }
+      })
+    },
+    onCurCityChange(newCity) {
+      this.setPlaceSearchService(newCity)
+    },
     ...mapMutations([
       'setIpCity',
       'updateCity',
@@ -226,15 +246,18 @@ export default {
     address(newAddr) {
       if (!newAddr.lngLat) return
       const lngLat = newAddr.lngLat
-      // if (newAddr.ifMove) this.moveCenter(lngLat)
+      if (newAddr.ifMove) this.moveCenter(lngLat)
       this.getNearPois(lngLat)
+    },
+    curCity(newCity) {
+      if (newCity !== this.ipCity) this.setPlaceSearchService(newCity)
     },
     locationInput(newVal) {
       this.hideSearchingErrorInfo()
       this.showSearchingInfo()
       newVal === ''
         ? this.hideSearchingInfo()
-        : this.keywordSearch(newval)
+        : this.keywordSearch(newVal)
     }
   },
   components: {
