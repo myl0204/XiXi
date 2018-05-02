@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 export default {
   computed: {
-    showFlag() {
+    isVisible() {
       return this.$store.state.logInStep === this.CURRENT_STEP
     }
   },

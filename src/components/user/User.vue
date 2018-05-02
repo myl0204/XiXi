@@ -1,6 +1,6 @@
 <template>
 <transition :name="transitionName" @before-enter="beforeEnter">
-  <div class="user-wrapper" v-show="showFlag">
+  <div class="user-wrapper" v-show="isVisible">
     <div class="mask" @click="maskClick"></div>
     <div class="user-content">
       <div class="user-header">
@@ -198,8 +198,8 @@ export default {
     this.maxMoveDistance = this.deviceHeight - 117 - 76 + 18
   },
   computed: {
-    showFlag() {
-      return this.$store.state.userShowFlag
+    isVisible() {
+      return this.$store.state.isUserVisible
     },
     currentUser() {
       return this.$store.state.currentUser

@@ -144,6 +144,7 @@ export default {
     },
     changeCity(ev) {
       const newCity = ev.target.dataset.cname
+      console.log(newCity)
       this.updateCity(newCity)
       this.$emit('city-changed')
     },
@@ -162,15 +163,16 @@ export default {
         height += listItem.clientHeight
         this.listHeight.push(height)
       })
+    },
+    resetList() {
+      this.clearInput()
+      this._scroll(0)
+      this.scrollY = 0
     }
   },
   watch: {
-    listShowFlag(newVal) {
-      if (newVal === false) {
-        this.clearInput()
-        this._scroll(0)
-        this.scrollY = 0
-      }
+    isListVisible(newVal) {
+      newVal ? '' : this.resetList()
     },
     filteredCityList() {
       const hasResult = !!this.filteredCityList[0]

@@ -50,7 +50,7 @@ export default {
         ? this.navLetterList.length - 1
         : index < 0
         ? 0
-        : index
+        : currentIndex + parseInt(dif)
       this.currentLetter = this.navLetterList[index]
       this.$emit('listNavTouchmove', index)
     }

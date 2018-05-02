@@ -9,7 +9,6 @@
       </div>
       <span class="icon-close" v-if="hasCloseIcon" @click.capture.stop="cancelClick"><Icon name="times" scale="0.8"></Icon></span>
       <span class="icon-back" v-if="hasBackArrow" @click="backClick"><Icon name="chevron-left" scale="0.8"></Icon></span>
-      <!-- <slot name="icon" v-if=""></slot> -->
       <div class="modal-content" v-if="hasContent">
         <slot name="content"></slot>
       </div>
@@ -20,7 +19,7 @@
           :class="{active: confirmIsActive}"
           @click="confirmClick">
           {{confirmText}}
-          <loading :loadingShowFlag="loadingShowFlag"></loading>
+          <loading :isVisible="isLoadingVisible"></loading>
         </a>
       </div>
     </div>
@@ -37,7 +36,7 @@ export default {
       type: Boolean,
       default: false
     },
-    loadingShowFlag: {
+    isLoadingVisible: {
       type: Boolean,
       default: false
     },
@@ -53,10 +52,6 @@ export default {
       type: Boolean,
       default: true
     },
-    // hasTitle: {
-    //   type: Boolean,
-    //   default: true
-    // },
     hasContent: {
       type: Boolean,
       default: true
@@ -92,15 +87,11 @@ export default {
     }
   },
   methods: {
-    // hide() {
-    //   this.$emit('hide')
-    // },
     backClick() {
       this.$emit('back')
     },
     cancelClick(e) {
       this.$emit('cancel', e)
-      console.log(e.target.nodeName)
     },
     confirmClick(e) {
       this.$emit('confirm', e)

@@ -1,26 +1,23 @@
 <template>
-  <!-- <div class="modal-login"> -->
-    <modal 
-      :showFlag="showFlag"
-      :loadingShowFlag="loadingShowFlag"
-      :confirmText="confirmText" 
-      :confirmIsActive="confirmIsActive"
-      @click.native="preventBlur"
-      @confirm="confirm"
-      @cancel="hide">
-      <h2 slot="title">输入密码</h2>
-      <div class="log-content" slot="content">
-        <div class="user content">
-          <input type="text" :value="currentUser" @click="goPrevStep">
-        </div>
-        <div class="passwd content">
-          <input type="password" placeholder="请输入密码" v-model="input" autofocus="true" ref="input">
-        </div>
-        <span class="text" @click="stepToValidation">忘记密码？</span>
+  <modal 
+    :isVisible="isVisible"
+    :isLoadingVisible="isLoadingVisible"
+    :confirmText="confirmText" 
+    :confirmIsActive="confirmIsActive"
+    @click.native="preventBlur"
+    @confirm="confirm"
+    @cancel="hide">
+    <h2 slot="title">输入密码</h2>
+    <div class="log-content" slot="content">
+      <div class="user content">
+        <input type="text" :value="currentUser" @click="goPrevStep">
       </div>
-
-    </modal>
-  <!-- </div> -->
+      <div class="passwd content">
+        <input type="password" placeholder="请输入密码" v-model="input" autofocus="true" ref="input">
+      </div>
+      <span class="text" @click="stepToValidation">忘记密码？</span>
+    </div>
+  </modal>
 </template>
 
 <script>
@@ -37,7 +34,7 @@ export default {
   data() {
     return {
       input: '',
-      loadingShowFlag: false
+      isLoadingVisible: false
     }
   },
   created() {
@@ -51,33 +48,25 @@ export default {
     })
   },
   computed: {
-    showFlag() {
-      return this.$store.state.logInStep === CURRENT_STEP
-    },
     currentUser() {
       return this.$store.state.currentUser
     },
     confirmText() {
-      return this.loadingShowFlag ? '' : '登录'
+      return this.isLoadingVisible ? '' : '登录'
     },
     confirmIsActive() {
       return this.input.length >= 6
     }
   },
   methods: {
-    // goPrevStep() {
-    //   this.$store.commit('changeLogInStepTo', PREV_STEP)
-    // },
     preventBlur(ev) {
       this.$refs.input.focus()
-      // let targetInput = this.$refs.inputs[this.currentIndex]
-      // targetInput ? this.$refs.inputs[this.currentIndex].focus() : ''
     },
     confirm() {
       if (!this.confirmIsActive) {
         return
       }
-      this.loadingShowFlag = true
+      this.isLoadingVisible = true
       // 设置已登陆cookie，设置localstorage
       const maxAge = 60 * 60 * 24 * 7
       storage.setCookie('isLogged', true, maxAge)

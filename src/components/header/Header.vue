@@ -4,7 +4,10 @@
       <div class="user" @click="userClick">
         <Icon name="user" scale="1.5"></Icon>
       </div>
-      <div class="city" @click="showCityList"><span class="text">{{curCity}}</span><span class="icon"><Icon name="angle-down"></Icon></span></div>
+      <div class="city" @click="showCityList">
+        <span class="text">{{curCity}}</span>
+        <span class="icon"><Icon name="angle-down"></Icon></span>
+      </div>
       <div class="message">
         <Icon name="reorder" scale="1.5"></Icon>
       </div>
@@ -83,7 +86,6 @@ export default {
   },
   computed: {
     curCity() {
-      /* eslint-disable no-undef */
       return this.$store.state.curCity
     }
   },
@@ -113,6 +115,11 @@ export default {
         listType: CITY_LIST,
         listSubType: DEFALUT_LISTSUBTYPE
       })
+    }
+  },
+  watch: {
+    curCity() {
+      this.$forceUpdate()
     }
   },
   components: {

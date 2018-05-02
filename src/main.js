@@ -44,7 +44,7 @@ const store = new Vuex.Store({
     listSubType: 0,
     cityInput: '',
     locationInput: '',
-    userShowFlag: false,
+    isUserVisible: false,
     currentUser: '',
     logInStep: 0
   },
@@ -97,17 +97,10 @@ const store = new Vuex.Store({
       state.locationInput = newVal
     },
     showUser(state) {
-      state.userShowFlag = true
+      state.isUserVisible = true
     },
     hideUser(state) {
-      state.userShowFlag = false
-    },
-    // showLogIn(state) {
-    //   state.logInShowFlag = true
-    //   // state.uid = uid
-    // },
-    hideLogIn(state) {
-      state.logInShowFlag = false
+      state.isUserVisible = false
     },
     changeUser(state, newUser) {
       state.currentUser = newUser

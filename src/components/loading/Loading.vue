@@ -1,5 +1,5 @@
 <template>
-  <div class="dot-wrapper" v-show="loadingShowFlag">
+  <div class="dot-wrapper" v-show="isVisible">
     <span class="dot dot-1"></span>
     <span class="dot dot-2"></span>
     <span class="dot dot-3"></span>
@@ -9,7 +9,7 @@
 <script>
 export default {
   props: {
-    loadingShowFlag: {
+    isVisible: {
       type: Boolean,
       default: false
     }

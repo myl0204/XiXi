@@ -1,6 +1,6 @@
 <template>
   <Modal
-    :showFlag="showFlag"
+    :isVisible="isVisible"
     :hasBtn="false"
     :hasBackArrow="true"
     @click.native="preventBlur"
@@ -47,7 +47,6 @@ export default {
     return {
       total: [1, 2, 3, 4],
       currentIndex: 0,
-      // filledStatus: [false, false, false, false],
       countDown: 60,
       messageShowFlag: false,
       isCodeWrong: false,
@@ -82,18 +81,8 @@ export default {
         return prev + cur
       })
     }
-    // validationCodeArray() {
-    //   let code = ''
-    //   this.$refs.inputs.forEach((input) => {
-    //     code += input.value
-    //   })
-    //   return code
-    // }
   },
   methods: {
-    // hide(ev) {
-    //   console.log(ev.target)
-    // },
     setIndex(ev, index) {
       this.currentIndex = index
     },
@@ -106,14 +95,12 @@ export default {
         ev.target.value = value
         ev.target.parentElement.classList.add('filled')
         this.validationCodeArray.splice(index, 1, value)
-        // this.filledStatus.splice(index, 1, true)
         if (index < 3) {
           this.$refs.inputs[++index].focus()
           this.currentIndex = index
         }
       } else {
         this.validationCodeArray.splice(index, 1, '')
-        // this.filledStatus.splice(index, 1, false)
         ev.target.parentElement.classList.remove('filled')
         if (index > 0) {
           this.$refs.inputs[--index].focus()
@@ -127,16 +114,8 @@ export default {
     normalize(ev) {
       ev.target.parentElement.classList.remove('active')
     },
-    // 点击其他区域，input不失焦
-    // preventBlur(ev) {
-    //   if (ev.target.nodeName !== 'INPUT') {
-    //     if (!(ev.target.nodeName === 'svg' || ev.target.nodeName === 'path' || ev.target.className.indexOf('icon-') !== -1)) {
-    //       ev.preventDefault()
-    //     }
-    //   }
-    // },
     preventBlur(ev) {
-      let targetInput = this.$refs.inputs[this.currentIndex]
+      const targetInput = this.$refs.inputs[this.currentIndex]
       targetInput ? this.$refs.inputs[this.currentIndex].focus() : ''
     },
     countZero() {

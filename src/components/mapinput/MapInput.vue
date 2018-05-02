@@ -19,7 +19,7 @@
         @touchend="normalize($event)"
         @click="showLocationList(locationListTypeFrom)">
         <span class="dot"></span>
-        <span class="text">{{myAddress.name}}</span>
+        <span class="text">{{ myAddress }}</span>
       </div>
       <div class="address address-to" 
         @touchstart="highlight($event)" 
@@ -64,7 +64,7 @@ export default {
   },
   computed: {
     myAddress() {
-      return this.$store.state.address
+      return this.$store.state.address.name
     }
   },
   methods: {
@@ -86,9 +86,6 @@ export default {
     normalize(ev) {
       ev.currentTarget.classList.remove('active')
     },
-    // showLocationList() {
-    //   this.$store.commit('showList')
-    // },
     showLocationList(type) {
       let {listSubType, placeholder} = type
       this.$store.commit('showList')

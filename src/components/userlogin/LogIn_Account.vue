@@ -1,8 +1,8 @@
 <template>
   <!-- <div class="modal-login"> -->
     <modal 
-      :showFlag="showFlag"
-      :loadingShowFlag="loadingShowFlag"
+      :isVisible="isVisible"
+      :isLoadingVisible="isLoadingVisible"
       :confirmText="confirmText" 
       :confirmIsActive="confirmIsActive"
       @confirm="confirm"
@@ -31,8 +31,7 @@ export default {
   data() {
     return {
       input: '',
-      // confirmText: '下一步',
-      loadingShowFlag: false
+      isLoadingVisible: false
     }
   },
   created() {
@@ -45,20 +44,10 @@ export default {
     })
   },
   computed: {
-    // showFlag() {
-    //   return this.$store.state.logInStep === CURRENT_STEP
-    // },
     confirmText() {
-      return this.loadingShowFlag ? '' : '下一步'
+      return this.isLoadingVisible ? '' : '下一步'
     },
     confirmIsActive() {
-      // let len = this.input.length
-      // if (len < 11) {
-      //   return false
-      // }
-      // if (len === 11) {
-      //   return true
-      // }
       return this.input.length === 11
     }
   },
@@ -70,7 +59,7 @@ export default {
       if (!this.confirmIsActive) {
         return
       }
-      this.loadingShowFlag = true
+      this.isLoadingVisible = true
       // 若是第一次登录，采用验证码登录。
       const hadLogged = storage.hadLogged(this.input)
       if (!hadLogged) {
@@ -95,9 +84,6 @@ export default {
 
 @import '../../common/scss/mixin.scss';
 .modal {
-  .modal-title {
-
-  }
   .phone-content {
     display: inline-block;
     padding: 0 15px;
