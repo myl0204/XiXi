@@ -40,7 +40,7 @@ export default {
     }
   },
   created() {
-    this.$http.get('/XiXi/api/city.json')
+    this.$http.get('https://raw.githubusercontent.com/myl0204/XiXi/master/city.json')
       .then((res) => {
         this.allCity = res.data
       })
