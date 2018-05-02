@@ -117,11 +117,6 @@ export default {
       })
     }
   },
-  watch: {
-    curCity() {
-      this.$forceUpdate()
-    }
-  },
   components: {
     Icon
   }

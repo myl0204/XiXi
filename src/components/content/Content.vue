@@ -36,7 +36,6 @@ export default {
       this.$refs.map.geolocation.getCurrentPosition()
     },
     onGeoComplete() {
-      console.log('知道了')
       this.isGeo = false
     }
   },

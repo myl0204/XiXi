@@ -28,7 +28,6 @@ const store = new Vuex.Store({
   state: {
     ipCity: '暂无城市信息',
     curCity: '获取城市中',
-    // address: '正在获取你的地点',
     address: {
       name: '正在获取你的地点',
       lngLat: {}
