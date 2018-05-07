@@ -1,13 +1,12 @@
 <template>
   <div id="app" @touchmove.prevent="touchmove">
-    <v-header></v-header>
-    <!-- <router-link to="/"></router-link> -->
-    <router-view></router-view>
-    <!-- <v-map ref="map"></v-map> -->
-    <!-- <map-input @geoBtnClick="getLocation"></map-input> -->
-    <List></List>
-    <User></User>
-    <LogIn></LogIn>
+    <v-header/>
+    <keep-alive include="vContent">
+      <router-view/>
+    </keep-alive>
+    <List/>
+    <User/>
+    <LogIn/>
   </div>
 </template>
 
@@ -24,8 +23,6 @@ export default {
   router,
   components: {
     'v-header': Header,
-    // 'v-map': vMap,
-    // MapInput,
     List,
     User,
     LogIn

@@ -14,6 +14,7 @@
 import vMap from '@@/map/Map'
 import MapInput from '@@/mapinput/MapInput'
 export default {
+  name: 'vContent',
   beforeRouteEnter(to, from, next) {
     // 在进入content组件之前，“获取”等候时间
     next((context) => {
