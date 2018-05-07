@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import vMap from '@@/map/Map'
 import vContent from '@@/content/Content'
 import Sharing from '@@/sharing/Sharing'
 import Passenger from '@@/sharing/Passenger'
@@ -8,9 +7,12 @@ import Driver from '@@/sharing/Driver'
 Vue.use(Router)
 
 export default new Router({
-  // mode: 'history',
   linkActiveClass: 'router-active',
   routes: [
+    {
+      path: '/',
+      redirect: '/fast'
+    },
     {
       path: '/sharing',
       name: 'sharing',
